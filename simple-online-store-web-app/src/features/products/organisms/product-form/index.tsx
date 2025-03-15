@@ -16,9 +16,8 @@ interface Props {
 }
 
 export const ProductForm = ({ product }: Props) => {
-  const [toastStatus, setToastStatus] = useState<null | "success" | "error">(
-    null,
-  );
+  const [isErrorToastVisible, setIsErrorToastVisible] = useState(false);
+  const [isSuccessToastVisible, setIsSuccessToastVisible] = useState(false);
 
   const { register, handleSubmit, setValue } = useForm<Product>();
   const dispatch = useAppDispatch();
@@ -27,10 +26,10 @@ export const ProductForm = ({ product }: Props) => {
     dispatch(createProduct(data))
       .unwrap()
       .then(() => {
-        setToastStatus("success");
+        setIsSuccessToastVisible(true);
       })
       .catch(() => {
-        setToastStatus("error");
+        setIsErrorToastVisible(true);
       });
   };
 
@@ -43,17 +42,10 @@ export const ProductForm = ({ product }: Props) => {
     }
   }, [product, setValue]);
 
-  const toastMessage = useMemo(() => {
-    if (toastStatus === "success") {
-      return product ? "Товар успешно обновлен" : "Товар успешно создан";
-    }
-
-    if (toastStatus === "error") {
-      return "Ошибка при сохранении товара";
-    }
-
-    return "";
-  }, [product, toastStatus]);
+  const succsesMessage = useMemo(
+    () => (product ? "Товар успешно обновлен" : "Товар успешно создан"),
+    [product],
+  );
 
   return (
     <div>
@@ -80,10 +72,17 @@ export const ProductForm = ({ product }: Props) => {
       </form>
 
       <CustomSnackbar
-        open={!!toastStatus}
-        onClose={() => setToastStatus(null)}
-        severity={toastStatus}
-        message={toastMessage}
+        open={isSuccessToastVisible}
+        onClose={() => setIsSuccessToastVisible(false)}
+        severity={"success"}
+        message={succsesMessage}
+      />
+
+      <CustomSnackbar
+        open={isErrorToastVisible}
+        onClose={() => setIsErrorToastVisible(false)}
+        severity={"error"}
+        message={"Ошибка при сохранении товара"}
       />
     </div>
   );
