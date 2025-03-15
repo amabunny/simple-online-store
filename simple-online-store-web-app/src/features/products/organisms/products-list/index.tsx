@@ -8,6 +8,8 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks/store";
 
 import { ProductCard } from "../../molecules/product-card";
 import { setProducts } from "../../store";
+import { ProductFilters } from "../product-filters";
+import styles from "./style.module.scss";
 
 interface Props {
   initialProducts: Product[];
@@ -26,12 +28,18 @@ export const ProductsList = ({ initialProducts }: Props) => {
   const renderingProducts = products.length > 0 ? products : initialProducts;
 
   return (
-    <Grid2 container spacing={2}>
-      {renderingProducts.map((product) => (
-        <Grid2 key={product.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-          <ProductCard {...product} />
-        </Grid2>
-      ))}
+    <Grid2 container spacing={4} flexDirection={"row"}>
+      <Grid2 size={{ xs: 12, sm: 12, md: 3, lg: 2 }}>
+        <ProductFilters className={styles.filters} />
+      </Grid2>
+
+      <Grid2 container spacing={2} size={{ xs: 12, sm: 12, md: 9, lg: 10 }}>
+        {renderingProducts.map((product) => (
+          <Grid2 key={product.id} size={{ xs: 12, sm: 6, md: 6, lg: 4 }}>
+            <ProductCard {...product} />
+          </Grid2>
+        ))}
+      </Grid2>
     </Grid2>
   );
 };
