@@ -1,6 +1,13 @@
+using AutoMapper;
+using SimpleOnlineStoreApi.Entities.DTO;
+using SimpleOnlineStoreApi.Entities.Models;
+
 namespace SimpleOnlineStoreApi.Profiles;
 
-public class MappingProfile
+public class MappingProfile : Profile
 {
-    
+    public MappingProfile()
+    {
+        CreateMap<CreateProductDto, Product>();
+    }
 }

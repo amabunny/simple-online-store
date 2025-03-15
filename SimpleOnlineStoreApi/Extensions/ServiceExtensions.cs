@@ -1,3 +1,5 @@
+using SimpleOnlineStoreApi.Services;
+
 namespace SimpleOnlineStoreApi.Extensions;
 
 public static class ServiceExtensions
@@ -12,5 +14,10 @@ public static class ServiceExtensions
                     .AllowAnyMethod()
                     .AllowAnyHeader());
         });
+    }
+
+    public static void RegisterServices(this IServiceCollection services)
+    {
+        services.AddScoped<ProductsService>();
     }
 }
