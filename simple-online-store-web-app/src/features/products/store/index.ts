@@ -7,6 +7,13 @@ const initialState: IProductsState = {
   products: [],
   loading: false,
   error: null,
+  inFlight: false,
+  filters: {
+    priceFrom: 0,
+    priceTo: 0,
+    brand: "",
+    name: "",
+  },
 };
 
 export const productsSlice = createSlice({
@@ -15,6 +22,14 @@ export const productsSlice = createSlice({
   reducers: {
     setProducts: (state, action) => {
       state.products = action.payload;
+    },
+    setFilters: (state, action) => {
+      state.filters = action.payload;
+    },
+    setInFlight: (state, action) => {
+      if (state.inFlight !== action.payload) {
+        state.inFlight = action.payload;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -32,8 +47,11 @@ export const productsSlice = createSlice({
   },
 });
 
-export const { setProducts } = productsSlice.actions;
-
+export {
+  filteredProductsSelector,
+  isAnyFilterAppliedSelector,
+} from "./selectors";
+export const { setProducts, setFilters, setInFlight } = productsSlice.actions;
 export { createProduct, fetchProducts };
-
 export const productsReducer = productsSlice.reducer;
+export type { IFilters } from "./types";

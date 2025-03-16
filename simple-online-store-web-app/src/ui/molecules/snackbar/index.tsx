@@ -1,13 +1,18 @@
 import { Alert, Snackbar } from "@mui/material";
 
-interface Props {
+interface IProps {
   open: boolean;
   onClose: () => void;
   severity: "error" | "success" | null;
   message: string;
 }
 
-export const CustomSnackbar = ({ open, onClose, severity, message }: Props) => {
+export const CustomSnackbar = ({
+  open,
+  onClose,
+  severity,
+  message,
+}: IProps) => {
   return (
     <Snackbar
       open={open}

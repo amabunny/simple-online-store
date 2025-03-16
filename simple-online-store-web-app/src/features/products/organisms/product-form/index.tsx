@@ -11,11 +11,11 @@ import { CustomSnackbar } from "@/ui";
 import { createProduct } from "../../store";
 import styles from "./style.module.scss";
 
-interface Props {
+interface IProps {
   product?: Product;
 }
 
-export const ProductForm = ({ product }: Props) => {
+export const ProductForm = ({ product }: IProps) => {
   const [isErrorToastVisible, setIsErrorToastVisible] = useState(false);
   const [isSuccessToastVisible, setIsSuccessToastVisible] = useState(false);
 

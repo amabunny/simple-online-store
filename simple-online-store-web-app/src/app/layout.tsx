@@ -22,11 +22,11 @@ export const metadata: Metadata = {
   description: "Simple MUI Online Shop built with Next.js",
 };
 
-interface Props {
+interface IProps {
   children: React.ReactNode;
 }
 
-export default function RootLayout({ children }: Readonly<Props>) {
+export default function RootLayout({ children }: Readonly<IProps>) {
   return (
     <html lang="ru">
       <body className={roboto.variable}>

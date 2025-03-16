@@ -2,11 +2,12 @@ import { Container } from "@mui/material";
 
 import { Header } from "../../organisms/header";
 import styles from "./style.module.scss";
-interface Props {
+
+interface IProps {
   children?: React.ReactNode;
 }
 
-export const BaseTemplate = ({ children }: Props) => {
+export const BaseTemplate = ({ children }: IProps) => {
   return (
     <div>
       <Header />

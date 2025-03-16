@@ -7,13 +7,18 @@ import {
   CardContent,
   CardMedia,
   Chip,
+  Skeleton,
   Typography,
 } from "@mui/material";
 import { useMemo } from "react";
 
 import { Product } from "@/api/base";
 
-export const ProductCard = ({ brand, name, price }: Product) => {
+interface IProps extends Product {
+  loading?: boolean;
+}
+
+export const ProductCard = ({ brand, name, price, loading }: IProps) => {
   const formattedPrice = useMemo(() => {
     if (!price) return "0 RUB";
 
@@ -26,23 +31,38 @@ export const ProductCard = ({ brand, name, price }: Product) => {
   return (
     <Card>
       <CardActionArea>
-        <CardMedia
-          component="img"
-          height={300}
-          image={"/images/products/product-placeholder.jpg"}
-          alt={name ?? ""}
-        />
+        {loading ? (
+          <CardMedia component="div">
+            <Skeleton height={300} sx={{ transform: "none" }} />
+          </CardMedia>
+        ) : (
+          <CardMedia
+            component="img"
+            height={300}
+            image={"/images/products/product-placeholder.jpg"}
+            alt={name ?? ""}
+          />
+        )}
+
         <CardContent>
           <Typography gutterBottom variant="h5">
-            {brand} {name}
+            {loading ? <Skeleton /> : `${brand} ${name}`}
           </Typography>
 
-          <Chip label={formattedPrice} color="primary" variant="outlined" />
+          {loading ? (
+            <Skeleton height={33} width={120} />
+          ) : (
+            <Chip label={formattedPrice} color="primary" variant="outlined" />
+          )}
         </CardContent>
       </CardActionArea>
 
       <CardActions>
-        <Button endIcon={<AddShoppingCart />}>Добавить в корзину</Button>
+        {loading ? (
+          <Skeleton height={36} width={120} />
+        ) : (
+          <Button endIcon={<AddShoppingCart />}>Добавить в корзину</Button>
+        )}
       </CardActions>
     </Card>
   );

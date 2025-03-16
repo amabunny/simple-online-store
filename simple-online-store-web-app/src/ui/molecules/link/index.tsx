@@ -3,7 +3,7 @@ import Link, { LinkProps } from "next/link";
 
 import styles from "./style.module.scss";
 
-interface CustomLinkProps extends Omit<LinkProps, "as"> {
+interface ICustomLinkProps extends Omit<LinkProps, "as"> {
   underline?: boolean;
   children: React.ReactNode;
   className?: string;
@@ -14,7 +14,7 @@ export const CustomLink = ({
   children,
   underline = true,
   ...props
-}: CustomLinkProps) => {
+}: ICustomLinkProps) => {
   return (
     <Link
       className={clsx(props.className, styles.link, {
