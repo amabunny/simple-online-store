@@ -1,10 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import { productsReducer } from "@/features/products";
+import { cartListenerMiddleware, cartReducer } from "@/shared/cart";
+import { productsReducer } from "@/shared/products";
 
 export const makeStore = () =>
   configureStore({
-    reducer: { products: productsReducer },
+    reducer: { products: productsReducer, cart: cartReducer },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().prepend(cartListenerMiddleware.middleware),
   });
 
 export type AppStore = ReturnType<typeof makeStore>;

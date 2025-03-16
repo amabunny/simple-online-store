@@ -1,5 +1,6 @@
 import { Add, ShoppingCart } from "@mui/icons-material";
 import {
+  Badge,
   Grid2,
   IconButton,
   Popover,
@@ -10,9 +11,13 @@ import {
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { useAppSelector } from "@/lib/hooks/store";
+import { totalItemsCountSelector } from "@/shared/cart";
+
 import { CustomLink } from "../../molecules/link";
 
 export const Menu = () => {
+  const totalItemsCount = useAppSelector(totalItemsCountSelector);
   const [anchorEl, setAnchorEl] = useState<HTMLAnchorElement | null>(null);
   const currentPath = usePathname();
   const router = useRouter();
@@ -29,9 +34,11 @@ export const Menu = () => {
   return (
     <Grid2 container spacing={4}>
       <div>
-        <IconButton>
-          <ShoppingCart />
-        </IconButton>
+        <Badge badgeContent={totalItemsCount} color="secondary">
+          <IconButton size="small">
+            <ShoppingCart color="action" />
+          </IconButton>
+        </Badge>
 
         <IconButton
           component="a"
@@ -41,6 +48,7 @@ export const Menu = () => {
           onMouseLeave={() => setAnchorEl(null)}
           href="/products/create"
           onClick={handleLinkClick}
+          size="small"
         >
           <Add />
         </IconButton>

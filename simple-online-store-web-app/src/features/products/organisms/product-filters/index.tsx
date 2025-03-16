@@ -9,8 +9,8 @@ import {
   useDebounce,
   useDidUpdate,
 } from "@/lib/hooks";
+import { setFilters, setInFlight } from "@/shared/products";
 
-import { setFilters, setInFlight } from "../../store";
 import styles from "./style.module.scss";
 
 interface IProps {

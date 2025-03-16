@@ -13,12 +13,16 @@ import {
 import { useMemo } from "react";
 
 import { Product } from "@/api/base";
+import { useAppDispatch } from "@/lib/hooks/store";
+import { addToCart } from "@/shared/cart";
 
 interface IProps extends Product {
   loading?: boolean;
 }
 
-export const ProductCard = ({ brand, name, price, loading }: IProps) => {
+export const ProductCard = ({ brand, name, price, loading, id }: IProps) => {
+  const dispatch = useAppDispatch();
+
   const formattedPrice = useMemo(() => {
     if (!price) return "0 RUB";
 
@@ -27,6 +31,11 @@ export const ProductCard = ({ brand, name, price, loading }: IProps) => {
       currency: "RUB",
     }).format(price);
   }, [price]);
+
+  const handleAddToCart = () => {
+    if (!id) return;
+    dispatch(addToCart(id));
+  };
 
   return (
     <Card>
@@ -61,7 +70,9 @@ export const ProductCard = ({ brand, name, price, loading }: IProps) => {
         {loading ? (
           <Skeleton height={36} width={120} />
         ) : (
-          <Button endIcon={<AddShoppingCart />}>Добавить в корзину</Button>
+          <Button onClick={handleAddToCart} endIcon={<AddShoppingCart />}>
+            Добавить в корзину
+          </Button>
         )}
       </CardActions>
     </Card>

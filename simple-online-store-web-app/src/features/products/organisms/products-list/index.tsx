@@ -5,13 +5,13 @@ import { useEffect } from "react";
 
 import { Product } from "@/api/base";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/store";
-
-import { ProductCard } from "../../molecules/product-card";
 import {
   filteredProductsSelector,
   isAnyFilterAppliedSelector,
   setProducts,
-} from "../../store";
+} from "@/shared/products";
+
+import { ProductCard } from "../product-card";
 import { ProductFilters } from "../product-filters";
 import styles from "./style.module.scss";
 

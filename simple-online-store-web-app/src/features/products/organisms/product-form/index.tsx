@@ -6,9 +6,9 @@ import { useForm } from "react-hook-form";
 
 import { Product } from "@/api/base";
 import { useAppDispatch } from "@/lib/hooks/store";
+import { createProduct } from "@/shared/products";
 import { CustomSnackbar } from "@/ui";
 
-import { createProduct } from "../../store";
 import styles from "./style.module.scss";
 
 interface IProps {
