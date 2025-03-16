@@ -6,6 +6,7 @@ export interface IProductsState {
   filters: IFilters;
   error: string | null;
   inFlight: boolean;
+  sort: Sort;
 }
 
 export interface IFilters {
@@ -13,4 +14,11 @@ export interface IFilters {
   priceTo: number;
   brand: string;
   name: string;
+  isNew: boolean;
+}
+
+export enum Sort {
+  ExpensiveFirst = "ExpensiveFirst",
+  CheapFirst = "CheapFirst",
+  NewFirst = "NewFirst",
 }

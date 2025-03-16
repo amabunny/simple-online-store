@@ -13,9 +13,13 @@ public class ProductsController(ProductsService productsService) : ControllerBas
     [HttpGet]
     public ActionResult<Product[]> GetAll([FromQuery] decimal? priceFrom,
         [FromQuery] decimal? priceTo,
+        [FromQuery] bool? isNew,
+        [FromQuery] string? name,
+        [FromQuery] string? brand,
         [FromQuery] string? orderBy, Order? order)
     {
-        var products = productsService.GetAll(priceFrom, priceTo, order, orderBy);
+        var products =
+            productsService.GetAll(priceFrom, priceTo, brand, name, isNew, order, orderBy);
 
         return Ok(products);
     }

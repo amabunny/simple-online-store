@@ -2,7 +2,3 @@
 
 @import "reset-css";
 @import "@mui/material/colors";
-
-body {
-  font-family: var(--font-roboto), sans-serif;
-}

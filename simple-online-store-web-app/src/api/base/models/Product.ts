@@ -43,6 +43,12 @@ export interface Product {
      * @memberof Product
      */
     price?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Product
+     */
+    isNew?: boolean;
 }
 
 /**
@@ -68,6 +74,7 @@ export function ProductFromJSONTyped(json: any, ignoreDiscriminator: boolean): P
         'brand': json['brand'],
         'name': json['name'],
         'price': json['price'] == null ? undefined : json['price'],
+        'isNew': json['isNew'] == null ? undefined : json['isNew'],
     };
 }
 
@@ -86,6 +93,7 @@ export function ProductToJSONTyped(value?: Product | null, ignoreDiscriminator: 
         'brand': value['brand'],
         'name': value['name'],
         'price': value['price'],
+        'isNew': value['isNew'],
     };
 }
 

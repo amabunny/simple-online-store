@@ -8,28 +8,22 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
-import { useAppSelector } from "@/lib/hooks/store";
+import { useAppSelector, useLinkOnClick } from "@/lib/hooks";
 import { totalItemsCountSelector } from "@/shared/cart";
 
 import { CustomLink } from "../../molecules/link";
 
 export const Menu = () => {
   const totalItemsCount = useAppSelector(totalItemsCountSelector);
-  const [anchorEl, setAnchorEl] = useState<HTMLAnchorElement | null>(null);
   const currentPath = usePathname();
-  const router = useRouter();
 
-  /**
-   * Хотел использовать prop component=CustomLink от IconButton, но миссматч по типам, который не исправляется без костылей.
-   * Насколько я знаю, для SEO необходимо, чтобы была именно ссылка в href
-   */
-  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    router.push(e.currentTarget.href);
-  };
+  const [createLinkAnchor, setCreateLinkAnchor] =
+    useState<HTMLAnchorElement | null>(null);
+
+  const handleLinkClick = useLinkOnClick();
 
   return (
     <Grid2 container spacing={4}>
@@ -43,9 +37,9 @@ export const Menu = () => {
         <IconButton
           component="a"
           onMouseEnter={(e) => {
-            setAnchorEl(e.currentTarget);
+            setCreateLinkAnchor(e.currentTarget);
           }}
-          onMouseLeave={() => setAnchorEl(null)}
+          onMouseLeave={() => setCreateLinkAnchor(null)}
           href="/products/create"
           onClick={handleLinkClick}
           size="small"
@@ -55,9 +49,9 @@ export const Menu = () => {
 
         <Popover
           id="cart-popover"
-          open={!!anchorEl}
-          onClose={() => setAnchorEl(null)}
-          anchorEl={anchorEl}
+          open={!!createLinkAnchor}
+          onClose={() => setCreateLinkAnchor(null)}
+          anchorEl={createLinkAnchor}
           anchorOrigin={{
             vertical: "bottom",
             horizontal: "center",
@@ -76,13 +70,13 @@ export const Menu = () => {
       <ToggleButtonGroup value={currentPath} exclusive size="small">
         <ToggleButton value={"/"}>
           <CustomLink href="/" underline={false}>
-            Товары (клиент)
+            Клиентский фильтр
           </CustomLink>
         </ToggleButton>
 
-        <ToggleButton value={"/server"}>
+        <ToggleButton value={"/products"}>
           <CustomLink href="/products" underline={false}>
-            Товары (сервер)
+            Серверный фильтр
           </CustomLink>
         </ToggleButton>
       </ToggleButtonGroup>

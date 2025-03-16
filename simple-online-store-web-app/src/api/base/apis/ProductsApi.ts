@@ -35,6 +35,9 @@ export interface ProductsCreatePostRequest {
 export interface ProductsGetRequest {
     priceFrom?: number;
     priceTo?: number;
+    isNew?: boolean;
+    name?: string;
+    brand?: string;
     orderBy?: string;
     order?: Order;
 }
@@ -63,6 +66,9 @@ export interface ProductsApiInterface {
      * 
      * @param {number} [priceFrom] 
      * @param {number} [priceTo] 
+     * @param {boolean} [isNew] 
+     * @param {string} [name] 
+     * @param {string} [brand] 
      * @param {string} [orderBy] 
      * @param {Order} [order] 
      * @param {*} [options] Override http request option.
@@ -120,6 +126,18 @@ export class ProductsApi extends runtime.BaseAPI implements ProductsApiInterface
 
         if (requestParameters['priceTo'] != null) {
             queryParameters['priceTo'] = requestParameters['priceTo'];
+        }
+
+        if (requestParameters['isNew'] != null) {
+            queryParameters['isNew'] = requestParameters['isNew'];
+        }
+
+        if (requestParameters['name'] != null) {
+            queryParameters['name'] = requestParameters['name'];
+        }
+
+        if (requestParameters['brand'] != null) {
+            queryParameters['brand'] = requestParameters['brand'];
         }
 
         if (requestParameters['orderBy'] != null) {

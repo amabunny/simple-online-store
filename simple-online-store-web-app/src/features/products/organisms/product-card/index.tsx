@@ -1,3 +1,5 @@
+"use client";
+
 import { AddShoppingCart } from "@mui/icons-material";
 import {
   Button,
@@ -7,21 +9,30 @@ import {
   CardContent,
   CardMedia,
   Chip,
+  Grid2,
   Skeleton,
   Typography,
 } from "@mui/material";
 import { useMemo } from "react";
 
 import { Product } from "@/api/base";
-import { useAppDispatch } from "@/lib/hooks/store";
+import { useAppDispatch, useLinkOnClick } from "@/lib/hooks";
 import { addToCart } from "@/shared/cart";
 
 interface IProps extends Product {
   loading?: boolean;
 }
 
-export const ProductCard = ({ brand, name, price, loading, id }: IProps) => {
+export const ProductCard = ({
+  brand,
+  name,
+  price,
+  loading,
+  id,
+  isNew,
+}: IProps) => {
   const dispatch = useAppDispatch();
+  const handleLinkOnClick = useLinkOnClick();
 
   const formattedPrice = useMemo(() => {
     if (!price) return "0 RUB";
@@ -39,7 +50,11 @@ export const ProductCard = ({ brand, name, price, loading, id }: IProps) => {
 
   return (
     <Card>
-      <CardActionArea>
+      <CardActionArea
+        component={"a"}
+        href={`/products/${id}`}
+        onClick={handleLinkOnClick}
+      >
         {loading ? (
           <CardMedia component="div">
             <Skeleton height={300} sx={{ transform: "none" }} />
@@ -58,11 +73,22 @@ export const ProductCard = ({ brand, name, price, loading, id }: IProps) => {
             {loading ? <Skeleton /> : `${brand} ${name}`}
           </Typography>
 
-          {loading ? (
-            <Skeleton height={33} width={120} />
-          ) : (
-            <Chip label={formattedPrice} color="primary" variant="outlined" />
-          )}
+          <Grid2 container spacing={1}>
+            {loading ? (
+              <Skeleton height={33} width={120} />
+            ) : (
+              <>
+                {isNew && (
+                  <Chip label="Новинка" color="warning" variant="outlined" />
+                )}
+                <Chip
+                  label={formattedPrice}
+                  color="primary"
+                  variant="outlined"
+                />
+              </>
+            )}
+          </Grid2>
         </CardContent>
       </CardActionArea>
 

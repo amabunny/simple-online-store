@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { createProduct, fetchProducts } from "./thunks";
-import { IProductsState } from "./types";
+import { createProduct, fetchProducts, fetchProductsByFilters } from "./thunks";
+import { IProductsState, Sort } from "./types";
 
 const initialState: IProductsState = {
   products: [],
@@ -13,7 +13,9 @@ const initialState: IProductsState = {
     priceTo: 0,
     brand: "",
     name: "",
+    isNew: false,
   },
+  sort: Sort.ExpensiveFirst,
 };
 
 export const productsSlice = createSlice({
@@ -30,6 +32,9 @@ export const productsSlice = createSlice({
       if (state.inFlight !== action.payload) {
         state.inFlight = action.payload;
       }
+    },
+    setSort: (state, action: PayloadAction<Sort>) => {
+      state.sort = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -51,7 +56,10 @@ export {
   filteredProductsSelector,
   isAnyFilterAppliedSelector,
 } from "./selectors";
-export const { setProducts, setFilters, setInFlight } = productsSlice.actions;
+export const { setProducts, setFilters, setInFlight, setSort } =
+  productsSlice.actions;
 export { createProduct, fetchProducts };
+export { fetchProductsByFilters };
 export const productsReducer = productsSlice.reducer;
 export type { IFilters } from "./types";
+export { Sort } from "./types";

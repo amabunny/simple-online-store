@@ -1,7 +1,10 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Grid2, TextField, Typography } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
+import { Checkbox, FormControlLabel } from "@mui/material";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { Product } from "@/api/base";
@@ -9,6 +12,7 @@ import { useAppDispatch } from "@/lib/hooks/store";
 import { createProduct } from "@/shared/products";
 import { CustomSnackbar } from "@/ui";
 
+import { ProductFormSchema, ProductFormSchemaType } from "./schema";
 import styles from "./style.module.scss";
 
 interface IProps {
@@ -16,17 +20,26 @@ interface IProps {
 }
 
 export const ProductForm = ({ product }: IProps) => {
-  const [isErrorToastVisible, setIsErrorToastVisible] = useState(false);
-  const [isSuccessToastVisible, setIsSuccessToastVisible] = useState(false);
+  const router = useRouter();
 
-  const { register, handleSubmit, setValue } = useForm<Product>();
+  const [isErrorToastVisible, setIsErrorToastVisible] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<ProductFormSchemaType>({
+    resolver: zodResolver(ProductFormSchema),
+  });
+
   const dispatch = useAppDispatch();
 
-  const onSubmit = (data: Product) => {
-    dispatch(createProduct(data))
+  const onSubmit = (data: ProductFormSchemaType) => {
+    dispatch(createProduct({ ...data, price: Number(data.price) }))
       .unwrap()
-      .then(() => {
-        setIsSuccessToastVisible(true);
+      .then((result) => {
+        router.push(`/products/${result.id}`);
       })
       .catch(() => {
         setIsErrorToastVisible(true);
@@ -35,17 +48,14 @@ export const ProductForm = ({ product }: IProps) => {
 
   useEffect(() => {
     if (product) {
-      setValue("id", product.id);
-      setValue("brand", product.brand);
-      setValue("name", product.name);
-      setValue("price", product.price);
+      if (typeof product.id === "number") setValue("id", product.id);
+      if (typeof product.brand === "string") setValue("brand", product.brand);
+      if (typeof product.name === "string") setValue("name", product.name);
+      if (typeof product.price === "number")
+        setValue("price", product.price.toString());
+      if (typeof product.isNew === "boolean") setValue("isNew", product.isNew);
     }
   }, [product, setValue]);
-
-  const succsesMessage = useMemo(
-    () => (product ? "Товар успешно обновлен" : "Товар успешно создан"),
-    [product],
-  );
 
   return (
     <div>
@@ -55,9 +65,30 @@ export const ProductForm = ({ product }: IProps) => {
 
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <Grid2 container spacing={4} flexDirection={"column"}>
-          <TextField label="Бренд" {...register("brand")} />
-          <TextField label="Название" {...register("name")} />
-          <TextField label="Цена" type="number" {...register("price")} />
+          <TextField
+            label="Бренд"
+            error={!!errors.brand}
+            helperText={errors.brand?.message}
+            {...register("brand")}
+          />
+          <TextField
+            label="Название"
+            error={!!errors.name}
+            helperText={errors.name?.message}
+            {...register("name")}
+          />
+          <TextField
+            label="Цена"
+            type="number"
+            error={!!errors.price}
+            helperText={errors.price?.message}
+            {...register("price")}
+          />
+
+          <FormControlLabel
+            control={<Checkbox {...register("isNew")} />}
+            label="Новинка"
+          />
 
           <Grid2 container spacing={2} className={styles.buttonsGrid}>
             <Button variant="contained" color="primary" type="submit">
@@ -70,13 +101,6 @@ export const ProductForm = ({ product }: IProps) => {
           </Grid2>
         </Grid2>
       </form>
-
-      <CustomSnackbar
-        open={isSuccessToastVisible}
-        onClose={() => setIsSuccessToastVisible(false)}
-        severity={"success"}
-        message={succsesMessage}
-      />
 
       <CustomSnackbar
         open={isErrorToastVisible}

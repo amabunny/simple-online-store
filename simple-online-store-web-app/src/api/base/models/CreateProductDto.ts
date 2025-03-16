@@ -37,6 +37,12 @@ export interface CreateProductDto {
      * @memberof CreateProductDto
      */
     price?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof CreateProductDto
+     */
+    isNew?: boolean;
 }
 
 /**
@@ -59,6 +65,7 @@ export function CreateProductDtoFromJSONTyped(json: any, ignoreDiscriminator: bo
         'brand': json['brand'] == null ? undefined : json['brand'],
         'name': json['name'] == null ? undefined : json['name'],
         'price': json['price'] == null ? undefined : json['price'],
+        'isNew': json['isNew'] == null ? undefined : json['isNew'],
     };
 }
 
@@ -76,6 +83,7 @@ export function CreateProductDtoToJSONTyped(value?: CreateProductDto | null, ign
         'brand': value['brand'],
         'name': value['name'],
         'price': value['price'],
+        'isNew': value['isNew'],
     };
 }
 

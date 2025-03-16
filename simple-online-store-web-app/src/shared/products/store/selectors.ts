@@ -42,7 +42,8 @@ export const filteredProductsSelector = createSelector(
 
 export const isAnyFilterAppliedSelector = createSelector(
   (state: RootState) => state.products.filters,
-  (filters) => {
-    return Object.values(filters).some((filter) => filter);
+  (state: RootState) => state.products.sort,
+  (filters, sort) => {
+    return Object.values(filters).some((filter) => filter) || sort;
   },
 );

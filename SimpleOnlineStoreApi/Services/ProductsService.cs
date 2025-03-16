@@ -9,13 +9,18 @@ namespace SimpleOnlineStoreApi.Services;
 
 public class ProductsService(ApplicationDbContext dbContext, IMapper mapper)
 {
-    public IEnumerable<Product> GetAll(decimal? priceFrom, decimal? priceTo, Order? order,
+    public IEnumerable<Product> GetAll(decimal? priceFrom, decimal? priceTo, string? brand,
+        string? name, bool? isNew,
+        Order? order,
         string? orderBy = "Id")
     {
         var query = dbContext.Products.AsQueryable();
 
         if (priceFrom != null) query = query.Where(p => p.Price >= priceFrom);
         if (priceTo != null) query = query.Where(p => p.Price <= priceTo);
+        if (isNew != null) query = query.Where(p => p.IsNew);
+        if (brand != null) query = query.Where(p => p.Brand.ToLower().Contains(brand.ToLower()));
+        if (name != null) query = query.Where(p => p.Name.ToLower().Contains(name.ToLower()));
 
         query = ApplyOrdering(query, orderBy, order);
 
@@ -30,6 +35,8 @@ public class ProductsService(ApplicationDbContext dbContext, IMapper mapper)
             "id" => p => p.Id,
             "name" => p => p.Name,
             "price" => p => p.Price,
+            "brand" => p => p.Brand,
+            "isnew" => p => p.IsNew,
             _ => p => p.Id
         };
 

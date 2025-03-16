@@ -11,4 +11,6 @@ public class Product
     [MaxLength(200)] public required string Name { get; set; }
 
     public decimal Price { get; set; }
+
+    public bool IsNew { get; set; }
 }

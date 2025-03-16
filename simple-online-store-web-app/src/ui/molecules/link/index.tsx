@@ -3,7 +3,7 @@ import Link, { LinkProps } from "next/link";
 
 import styles from "./style.module.scss";
 
-interface ICustomLinkProps extends Omit<LinkProps, "as"> {
+interface ICustomLinkProps extends LinkProps {
   underline?: boolean;
   children: React.ReactNode;
   className?: string;
