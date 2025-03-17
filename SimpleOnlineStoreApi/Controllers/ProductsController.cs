@@ -31,4 +31,22 @@ public class ProductsController(ProductsService productsService) : ControllerBas
 
         return Ok(product);
     }
+
+    [HttpGet("{id:int}")]
+    public ActionResult<Product> GetById(int id)
+    {
+        var product = productsService.GetById(id);
+        if (product == null) return NotFound();
+
+        return Ok(product);
+    }
+
+    [HttpPut("{id:int}")]
+    public ActionResult<Product> Update(int id, [FromBody] UpdateProductDto productDto)
+    {
+        var updatedProduct = productsService.Update(id, productDto);
+        if (updatedProduct == null) return NotFound();
+
+        return Ok(updatedProduct);
+    }
 }

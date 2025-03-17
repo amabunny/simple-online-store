@@ -9,5 +9,6 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<CreateProductDto, Product>();
+        CreateMap<UpdateProductDto, Product>().ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
     }
 }

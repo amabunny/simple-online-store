@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 
 import { AppStore, makeStore } from "@/lib/store";
 import { loadCartFromStorage } from "@/shared/cart";
+import { fetchProducts } from "@/shared/products";
 
 export const StoreProvider = ({ children }: PropsWithChildren) => {
   const storeRef = useRef<AppStore | null>(null);
@@ -15,6 +16,9 @@ export const StoreProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     storeRef.current?.dispatch(loadCartFromStorage());
+    storeRef.current?.dispatch(
+      fetchProducts({ order: "Asc", orderBy: "price" }),
+    );
   }, []);
 
   return <Provider store={storeRef.current}>{children}</Provider>;

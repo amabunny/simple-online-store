@@ -1,7 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import { productsApi } from "@/api";
-import { CreateProductDto, Order, ProductsGetRequest } from "@/api/base";
+import {
+  CreateProductDto,
+  Order,
+  ProductsGetRequest,
+  UpdateProductDto,
+} from "@/api/base";
 import type { RootState } from "@/lib/store";
 
 import { setFilters, setSort } from "./actions";
@@ -59,6 +64,16 @@ export const createProduct = createAsyncThunk(
   "products/createProduct",
   (product: CreateProductDto) => {
     return productsApi.productsCreatePost({ createProductDto: product });
+  },
+);
+
+export const updateProduct = createAsyncThunk(
+  "products/updateProduct",
+  (params: { id: number; product: UpdateProductDto }) => {
+    return productsApi.productsIdPut({
+      id: params.id,
+      updateProductDto: params.product,
+    });
   },
 );
 

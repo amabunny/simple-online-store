@@ -49,6 +49,12 @@ export interface Product {
      * @memberof Product
      */
     isNew?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof Product
+     */
+    description: string | null;
 }
 
 /**
@@ -57,6 +63,7 @@ export interface Product {
 export function instanceOfProduct(value: object): value is Product {
     if (!('brand' in value) || value['brand'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('description' in value) || value['description'] === undefined) return false;
     return true;
 }
 
@@ -75,6 +82,7 @@ export function ProductFromJSONTyped(json: any, ignoreDiscriminator: boolean): P
         'name': json['name'],
         'price': json['price'] == null ? undefined : json['price'],
         'isNew': json['isNew'] == null ? undefined : json['isNew'],
+        'description': json['description'],
     };
 }
 
@@ -94,6 +102,7 @@ export function ProductToJSONTyped(value?: Product | null, ignoreDiscriminator: 
         'name': value['name'],
         'price': value['price'],
         'isNew': value['isNew'],
+        'description': value['description'],
     };
 }
 

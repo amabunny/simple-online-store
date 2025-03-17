@@ -24,7 +24,7 @@ import {
   parseQueryBoolean,
   parseQueryNumber,
   parseQueryString,
-} from "@/lib/parse-query-string";
+} from "@/lib/parse-query";
 import {
   setFilters,
   setInFlight,
@@ -109,6 +109,20 @@ export const ProductFilters = ({ className }: IProps) => {
     }
     debouncedOnFiltersChange();
   }, [priceFrom, priceTo, brand, name, isNew, sort, debouncedOnFiltersChange]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(
+        setFilters({
+          priceTo: 0,
+          priceFrom: 0,
+          brand: "",
+          name: "",
+          isNew: false,
+        }),
+      );
+    };
+  }, [dispatch]);
 
   const isAnyFilterApplied = useMemo(
     () =>

@@ -5,6 +5,7 @@ export const ProductFormSchema = z.object({
   name: z.string().min(1, "Обязательное поле"),
   price: z.string().min(1, "Обязательное поле"),
   brand: z.string().min(1, "Обязательное поле"),
+  description: z.string().min(1, "Обязательное поле"),
   isNew: z.boolean(),
 });
 

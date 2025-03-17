@@ -51,4 +51,20 @@ public class ProductsService(ApplicationDbContext dbContext, IMapper mapper)
 
         return product;
     }
+
+    public Product? Update(int id, UpdateProductDto updateProductDto)
+    {
+        var product = dbContext.Products.FirstOrDefault(p => p.Id == id);
+        if (product == null) return null;
+
+        mapper.Map(updateProductDto, product);
+        dbContext.SaveChanges();
+
+        return product;
+    }
+
+    public Product? GetById(int id)
+    {
+        return dbContext.Products.Find(id);
+    }
 }

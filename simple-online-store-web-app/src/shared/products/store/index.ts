@@ -1,7 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { setFilters, setSort } from "./actions";
-import { createProduct, fetchProducts, fetchProductsByFilters } from "./thunks";
+import {
+  createProduct,
+  fetchProducts,
+  fetchProductsByFilters,
+  updateProduct,
+} from "./thunks";
 import { IProductsState, Sort } from "./types";
 
 const initialState: IProductsState = {
@@ -50,6 +55,24 @@ export const productsSlice = createSlice({
       state.loading = false;
       state.error = action.error.message ?? null;
     });
+    builder.addCase(createProduct.fulfilled, (state, action) => {
+      const exists = state.products.some(
+        (product) => product.id === action.payload.id,
+      );
+
+      if (!exists) {
+        state.products.push(action.payload);
+      }
+    });
+    builder.addCase(updateProduct.fulfilled, (state, action) => {
+      const index = state.products.findIndex(
+        (product) => product.id === action.payload.id,
+      );
+
+      if (index !== -1) {
+        state.products[index] = action.payload;
+      }
+    });
   },
 });
 
@@ -62,6 +85,6 @@ export const { setProducts, setInFlight } = productsSlice.actions;
 export { createProduct, fetchProducts, setFilters, setSort };
 export { fetchProductsByFilters };
 export const productsReducer = productsSlice.reducer;
-export { tryParseFiltersFromQs } from "./thunks";
+export { tryParseFiltersFromQs, updateProduct } from "./thunks";
 export type { IFilters } from "./types";
 export { Sort } from "./types";

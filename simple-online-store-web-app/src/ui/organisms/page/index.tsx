@@ -1,4 +1,4 @@
-import { Breadcrumbs, Grid2 } from "@mui/material";
+import { Breadcrumbs, Grid2, Typography } from "@mui/material";
 
 import { CustomLink } from "@/ui/molecules/link";
 
@@ -16,11 +16,17 @@ export const Page = ({ breadcrumbs, children }: IProps) => {
       {breadcrumbs && (
         <Grid2 size={{ xs: 12 }}>
           <Breadcrumbs>
-            {breadcrumbs.map((breadcrumb) => (
-              <CustomLink key={breadcrumb.label} href={breadcrumb.href}>
-                {breadcrumb.label}
-              </CustomLink>
-            ))}
+            {breadcrumbs.map((breadcrumb, index) =>
+              index === breadcrumbs.length - 1 ? (
+                <Typography key={breadcrumb.label}>
+                  {breadcrumb.label}
+                </Typography>
+              ) : (
+                <CustomLink key={breadcrumb.label} href={breadcrumb.href}>
+                  {breadcrumb.label}
+                </CustomLink>
+              ),
+            )}
           </Breadcrumbs>
         </Grid2>
       )}

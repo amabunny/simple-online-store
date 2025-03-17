@@ -13,4 +13,6 @@ public class Product
     public decimal Price { get; set; }
 
     public bool IsNew { get; set; }
+
+    [MaxLength(5000)] public required string Description { get; set; }
 }

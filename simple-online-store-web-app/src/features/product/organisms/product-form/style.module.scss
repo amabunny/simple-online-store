@@ -6,3 +6,8 @@
   margin-top: calc(var(--mui-spacing) * 3);
   justify-content: center;
 }
+
+.textarea {
+  width: 100%;
+  min-height: 300px;
+}

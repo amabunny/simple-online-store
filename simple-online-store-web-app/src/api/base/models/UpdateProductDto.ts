@@ -16,53 +16,53 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface CreateProductDto
+ * @interface UpdateProductDto
  */
-export interface CreateProductDto {
+export interface UpdateProductDto {
     /**
      * 
      * @type {string}
-     * @memberof CreateProductDto
+     * @memberof UpdateProductDto
      */
     brand?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof CreateProductDto
+     * @memberof UpdateProductDto
      */
     name?: string | null;
     /**
      * 
      * @type {number}
-     * @memberof CreateProductDto
+     * @memberof UpdateProductDto
      */
-    price?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof CreateProductDto
-     */
-    isNew?: boolean;
+    price?: number | null;
     /**
      * 
      * @type {string}
-     * @memberof CreateProductDto
+     * @memberof UpdateProductDto
      */
     description?: string | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UpdateProductDto
+     */
+    isNew?: boolean | null;
 }
 
 /**
- * Check if a given object implements the CreateProductDto interface.
+ * Check if a given object implements the UpdateProductDto interface.
  */
-export function instanceOfCreateProductDto(value: object): value is CreateProductDto {
+export function instanceOfUpdateProductDto(value: object): value is UpdateProductDto {
     return true;
 }
 
-export function CreateProductDtoFromJSON(json: any): CreateProductDto {
-    return CreateProductDtoFromJSONTyped(json, false);
+export function UpdateProductDtoFromJSON(json: any): UpdateProductDto {
+    return UpdateProductDtoFromJSONTyped(json, false);
 }
 
-export function CreateProductDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean): CreateProductDto {
+export function UpdateProductDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean): UpdateProductDto {
     if (json == null) {
         return json;
     }
@@ -71,16 +71,16 @@ export function CreateProductDtoFromJSONTyped(json: any, ignoreDiscriminator: bo
         'brand': json['brand'] == null ? undefined : json['brand'],
         'name': json['name'] == null ? undefined : json['name'],
         'price': json['price'] == null ? undefined : json['price'],
-        'isNew': json['isNew'] == null ? undefined : json['isNew'],
         'description': json['description'] == null ? undefined : json['description'],
+        'isNew': json['isNew'] == null ? undefined : json['isNew'],
     };
 }
 
-export function CreateProductDtoToJSON(json: any): CreateProductDto {
-    return CreateProductDtoToJSONTyped(json, false);
+export function UpdateProductDtoToJSON(json: any): UpdateProductDto {
+    return UpdateProductDtoToJSONTyped(json, false);
 }
 
-export function CreateProductDtoToJSONTyped(value?: CreateProductDto | null, ignoreDiscriminator: boolean = false): any {
+export function UpdateProductDtoToJSONTyped(value?: UpdateProductDto | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -90,8 +90,8 @@ export function CreateProductDtoToJSONTyped(value?: CreateProductDto | null, ign
         'brand': value['brand'],
         'name': value['name'],
         'price': value['price'],
-        'isNew': value['isNew'],
         'description': value['description'],
+        'isNew': value['isNew'],
     };
 }
 

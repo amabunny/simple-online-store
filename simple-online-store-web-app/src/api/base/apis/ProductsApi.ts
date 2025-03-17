@@ -18,6 +18,7 @@ import type {
   CreateProductDto,
   Order,
   Product,
+  UpdateProductDto,
 } from '../models/index';
 import {
     CreateProductDtoFromJSON,
@@ -26,6 +27,8 @@ import {
     OrderToJSON,
     ProductFromJSON,
     ProductToJSON,
+    UpdateProductDtoFromJSON,
+    UpdateProductDtoToJSON,
 } from '../models/index';
 
 export interface ProductsCreatePostRequest {
@@ -40,6 +43,15 @@ export interface ProductsGetRequest {
     brand?: string;
     orderBy?: string;
     order?: Order;
+}
+
+export interface ProductsIdGetRequest {
+    id: number;
+}
+
+export interface ProductsIdPutRequest {
+    id: number;
+    updateProductDto?: UpdateProductDto;
 }
 
 /**
@@ -80,6 +92,33 @@ export interface ProductsApiInterface {
     /**
      */
     productsGet(requestParameters: ProductsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Product>>;
+
+    /**
+     * 
+     * @param {number} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ProductsApiInterface
+     */
+    productsIdGetRaw(requestParameters: ProductsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Product>>;
+
+    /**
+     */
+    productsIdGet(requestParameters: ProductsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Product>;
+
+    /**
+     * 
+     * @param {number} id 
+     * @param {UpdateProductDto} [updateProductDto] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ProductsApiInterface
+     */
+    productsIdPutRaw(requestParameters: ProductsIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Product>>;
+
+    /**
+     */
+    productsIdPut(requestParameters: ProductsIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Product>;
 
 }
 
@@ -164,6 +203,71 @@ export class ProductsApi extends runtime.BaseAPI implements ProductsApiInterface
      */
     async productsGet(requestParameters: ProductsGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Product>> {
         const response = await this.productsGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async productsIdGetRaw(requestParameters: ProductsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Product>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling productsIdGet().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/Products/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ProductFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async productsIdGet(requestParameters: ProductsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Product> {
+        const response = await this.productsIdGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async productsIdPutRaw(requestParameters: ProductsIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Product>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling productsIdPut().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/Products/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: UpdateProductDtoToJSON(requestParameters['updateProductDto']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ProductFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async productsIdPut(requestParameters: ProductsIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Product> {
+        const response = await this.productsIdPutRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
