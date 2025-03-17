@@ -52,7 +52,7 @@ export const isAnyFilterAppliedSelector = createSelector(
   (filters, sort) => {
     return (
       Object.values(filters).some((filter) => filter) ||
-      sort !== Sort.CheapFirst
+      sort !== Sort.CheapFirstDefault
     );
   },
 );
@@ -66,7 +66,7 @@ export const sortedAndFilteredProductsSelector = createSelector(
     switch (sort) {
       case Sort.ExpensiveFirst:
         return products.sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
-      case Sort.CheapFirst:
+      case Sort.CheapFirstDefault:
         return products.sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
       case Sort.NewFirst:
         return products.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));

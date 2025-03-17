@@ -1,15 +1,26 @@
 "use client";
 
 import StorefrontIcon from "@mui/icons-material/Storefront";
-import { AppBar, Toolbar, Typography } from "@mui/material";
+import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
+
+import { useLinkOnClick } from "@/lib/hooks";
 
 import { Menu } from "../menu";
 
 export const Header = () => {
+  const handleLinkClick = useLinkOnClick();
+
   return (
     <AppBar position="static">
       <Toolbar>
-        <StorefrontIcon sx={{ mr: 2 }} />
+        <IconButton
+          component="a"
+          href="/"
+          onClick={handleLinkClick}
+          sx={{ mr: 1 }}
+        >
+          <StorefrontIcon />
+        </IconButton>
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
           MUI Online Shop
         </Typography>

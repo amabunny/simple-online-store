@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
+import { setFilters, setSort } from "./actions";
 import { createProduct, fetchProducts, fetchProductsByFilters } from "./thunks";
 import { IProductsState, Sort } from "./types";
 
@@ -15,7 +16,7 @@ const initialState: IProductsState = {
     name: "",
     isNew: false,
   },
-  sort: Sort.CheapFirst,
+  sort: Sort.CheapFirstDefault,
 };
 
 export const productsSlice = createSlice({
@@ -25,19 +26,19 @@ export const productsSlice = createSlice({
     setProducts: (state, action) => {
       state.products = action.payload;
     },
-    setFilters: (state, action) => {
-      state.filters = action.payload;
-    },
     setInFlight: (state, action) => {
       if (state.inFlight !== action.payload) {
         state.inFlight = action.payload;
       }
     },
-    setSort: (state, action: PayloadAction<Sort>) => {
-      state.sort = action.payload;
-    },
   },
   extraReducers: (builder) => {
+    builder.addCase(setFilters, (state, action) => {
+      state.filters = { ...state.filters, ...action.payload };
+    });
+    builder.addCase(setSort, (state, action) => {
+      state.sort = action.payload;
+    });
     builder.addCase(fetchProducts.pending, (state) => {
       state.loading = true;
     });
@@ -57,10 +58,10 @@ export {
   isAnyFilterAppliedSelector,
   sortedAndFilteredProductsSelector,
 } from "./selectors";
-export const { setProducts, setFilters, setInFlight, setSort } =
-  productsSlice.actions;
-export { createProduct, fetchProducts };
+export const { setProducts, setInFlight } = productsSlice.actions;
+export { createProduct, fetchProducts, setFilters, setSort };
 export { fetchProductsByFilters };
 export const productsReducer = productsSlice.reducer;
+export { tryParseFiltersFromQs } from "./thunks";
 export type { IFilters } from "./types";
 export { Sort } from "./types";

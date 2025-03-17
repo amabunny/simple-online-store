@@ -24,6 +24,8 @@ export const ProductsList = ({ initialProducts }: IProps) => {
     sortedAndFilteredProductsSelector,
   );
 
+  const inFlight = useAppSelector((state) => state.products.inFlight);
+
   const stateProducts = useAppSelector((state) => state.products.products);
   const isAnyFilterApplied = useAppSelector(isAnyFilterAppliedSelector);
 
@@ -49,7 +51,7 @@ export const ProductsList = ({ initialProducts }: IProps) => {
       <Grid2 container spacing={2} size={{ xs: 12, sm: 12, md: 9, lg: 9 }}>
         {renderingProducts.map((product) => (
           <Grid2 key={product.id} size={{ xs: 12, sm: 6, md: 6, lg: 4 }}>
-            <ProductCard {...product} />
+            <ProductCard {...product} loading={inFlight} />
           </Grid2>
         ))}
       </Grid2>

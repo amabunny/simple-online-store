@@ -19,6 +19,6 @@ export interface IFilters {
 
 export enum Sort {
   ExpensiveFirst = "ExpensiveFirst",
-  CheapFirst = "CheapFirst",
+  CheapFirstDefault = "CheapFirst",
   NewFirst = "NewFirst",
 }

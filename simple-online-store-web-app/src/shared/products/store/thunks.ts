@@ -2,8 +2,10 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import { productsApi } from "@/api";
 import { CreateProductDto, Order, ProductsGetRequest } from "@/api/base";
-import { RootState } from "@/lib/store";
-import { Sort } from "@/shared/products";
+import type { RootState } from "@/lib/store";
+
+import { setFilters, setSort } from "./actions";
+import { IFilters, Sort } from "./types";
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
@@ -16,10 +18,8 @@ export const fetchProductsByFilters = createAsyncThunk(
   "products/fetchProductsByFilters",
   (_, thunkApi) => {
     const state = thunkApi.getState() as RootState;
-
-    const filters = state.products.filters;
     const sort = state.products.sort;
-
+    const filters = state.products.filters;
     const order: Pick<ProductsGetRequest, "order" | "orderBy"> = {
       orderBy: "brand",
       order: Order.Asc,
@@ -31,7 +31,7 @@ export const fetchProductsByFilters = createAsyncThunk(
         order.order = Order.Desc;
         break;
 
-      case Sort.CheapFirst:
+      case Sort.CheapFirstDefault:
         order.orderBy = "price";
         order.order = Order.Asc;
         break;
@@ -59,5 +59,60 @@ export const createProduct = createAsyncThunk(
   "products/createProduct",
   (product: CreateProductDto) => {
     return productsApi.productsCreatePost({ createProductDto: product });
+  },
+);
+
+export const tryParseFiltersFromQs = createAsyncThunk(
+  "products/tryParseFiltersFromQs",
+  (_, thunkApi) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const state = thunkApi.getState() as RootState;
+    let sort = state.products.sort;
+
+    const priceFromQ = urlParams.get("priceFrom");
+    const priceToQ = urlParams.get("priceTo");
+    const brandQ = urlParams.get("brand");
+    const nameQ = urlParams.get("name");
+    const isNewQ = urlParams.get("isNew");
+    const sortQ = urlParams.get("sort");
+
+    const filters: Partial<IFilters> = {};
+
+    if (priceFromQ) {
+      filters.priceFrom = Number(priceFromQ);
+    }
+
+    if (priceToQ) {
+      filters.priceTo = Number(priceToQ);
+    }
+
+    if (brandQ) {
+      filters.brand = brandQ;
+    }
+
+    if (nameQ) {
+      filters.name = nameQ;
+    }
+
+    if (isNewQ) {
+      filters.isNew = isNewQ === "true";
+    }
+
+    switch (sortQ) {
+      case Sort.ExpensiveFirst:
+        sort = Sort.ExpensiveFirst;
+        break;
+
+      case Sort.NewFirst:
+        sort = Sort.NewFirst;
+        break;
+
+      default:
+        sort = Sort.CheapFirstDefault;
+        break;
+    }
+
+    thunkApi.dispatch(setFilters(filters));
+    thunkApi.dispatch(setSort(sort));
   },
 );

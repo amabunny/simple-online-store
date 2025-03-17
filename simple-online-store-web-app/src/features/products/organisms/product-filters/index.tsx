@@ -18,13 +18,19 @@ import {
   useAppSelector,
   useDebounce,
   useDidUpdate,
+  useQueryStringSync,
 } from "@/lib/hooks";
+import {
+  parseQueryBoolean,
+  parseQueryNumber,
+  parseQueryString,
+} from "@/lib/parse-query-string";
 import {
   setFilters,
   setInFlight,
   setSort as setProductsSort,
   Sort,
-  useFiltersSync,
+  tryParseFiltersFromQs,
 } from "@/shared/products";
 
 import styles from "./style.module.scss";
@@ -38,7 +44,7 @@ export const ProductFilters = ({ className }: IProps) => {
 
   const inFlight = useAppSelector((state) => state.products.inFlight);
 
-  const [sort, setSort] = useState<Sort>(Sort.CheapFirst);
+  const [sort, setSort] = useState<Sort>(Sort.CheapFirstDefault);
   const [priceFrom, setPriceFrom] = useState<number>(0);
   const [priceTo, setPriceTo] = useState<number>(0);
   const [brand, setBrand] = useState<string>("");
@@ -47,18 +53,32 @@ export const ProductFilters = ({ className }: IProps) => {
 
   const inFlightRef = useRef(inFlight);
 
-  const { syncFilters } = useFiltersSync({
-    priceFrom,
-    priceTo,
-    brand,
-    name,
-    isNew,
-    sort: sort !== Sort.CheapFirst ? sort : undefined,
-  });
+  const { syncWithQueryString } = useQueryStringSync();
 
   useEffect(() => {
     inFlightRef.current = inFlight;
   }, [inFlight]);
+
+  useEffect(() => {
+    const parsedSort = parseQueryString("sort") as Sort;
+    const parsedPriceFrom = parseQueryNumber("priceFrom");
+    const parsedPriceTo = parseQueryNumber("priceTo");
+    const parsedBrand = parseQueryString("brand");
+    const parsedName = parseQueryString("name");
+    const parsedIsNew = parseQueryBoolean("isNew");
+
+    if (parsedSort) setSort(parsedSort);
+    if (parsedPriceFrom !== null && parsedPriceFrom !== undefined)
+      setPriceFrom(parsedPriceFrom);
+    if (parsedPriceTo !== null && parsedPriceTo !== undefined)
+      setPriceTo(parsedPriceTo);
+    if (parsedBrand) setBrand(parsedBrand);
+    if (parsedName) setName(parsedName);
+    if (parsedIsNew !== null && parsedIsNew !== undefined)
+      setIsNew(parsedIsNew);
+
+    dispatch(tryParseFiltersFromQs());
+  }, [dispatch]);
 
   const handleFiltersClear = () => {
     setPriceFrom(0);
@@ -66,14 +86,21 @@ export const ProductFilters = ({ className }: IProps) => {
     setBrand("");
     setName("");
     setIsNew(false);
-    setSort(Sort.CheapFirst);
+    setSort(Sort.CheapFirstDefault);
   };
 
   const debouncedOnFiltersChange = useDebounce(() => {
     dispatch(setFilters({ priceTo, priceFrom, brand, name, isNew }));
     dispatch(setProductsSort(sort));
     dispatch(setInFlight(false));
-    syncFilters();
+    syncWithQueryString({
+      priceFrom,
+      priceTo,
+      brand,
+      name,
+      isNew,
+      sort: sort === Sort.CheapFirstDefault ? undefined : sort,
+    });
   }, 1000);
 
   useDidUpdate(() => {
@@ -83,26 +110,16 @@ export const ProductFilters = ({ className }: IProps) => {
     debouncedOnFiltersChange();
   }, [priceFrom, priceTo, brand, name, isNew, sort, debouncedOnFiltersChange]);
 
-  useEffect(() => {
-    return () => {
-      dispatch(
-        setFilters({
-          priceTo: 0,
-          priceFrom: 0,
-          brand: "",
-          name: "",
-          isNew: false,
-        }),
-      );
-      dispatch(setProductsSort(Sort.CheapFirst));
-    };
-  }, [dispatch]);
-
   const isAnyFilterApplied = useMemo(
     () =>
-      [priceFrom, priceTo, name, brand, isNew, sort !== Sort.CheapFirst].some(
-        Boolean,
-      ),
+      [
+        priceFrom,
+        priceTo,
+        name,
+        brand,
+        isNew,
+        sort !== Sort.CheapFirstDefault,
+      ].some(Boolean),
     [priceFrom, priceTo, name, brand, isNew, sort],
   );
 
@@ -123,7 +140,7 @@ export const ProductFilters = ({ className }: IProps) => {
           size="small"
           fullWidth
         >
-          <MenuItem value={Sort.CheapFirst}>
+          <MenuItem value={Sort.CheapFirstDefault}>
             <Grid2 container spacing={1} flexDirection={"row"}>
               <ArrowUpward fontSize="small" />
               Сначала недорогие

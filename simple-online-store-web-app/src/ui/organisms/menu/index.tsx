@@ -17,7 +17,12 @@ export const Menu = () => {
     <Grid2 container spacing={4}>
       <div>
         <Badge badgeContent={totalItemsCount} color="secondary">
-          <IconButton size="small">
+          <IconButton
+            size="small"
+            component="a"
+            href="/cart"
+            onClick={handleLinkClick}
+          >
             <ShoppingCart color="action" />
           </IconButton>
         </Badge>
