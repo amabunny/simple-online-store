@@ -8,11 +8,20 @@ interface IProps {
     label: string;
     href: string;
   }[];
+  title?: string;
 }
 
-export const Page = ({ breadcrumbs, children }: IProps) => {
+export const Page = ({ breadcrumbs, children, title }: IProps) => {
   return (
     <Grid2 container spacing={3} flexDirection={"column"}>
+      {title && (
+        <Grid2 size={{ xs: 12 }} sx={{ mt: 2 }}>
+          <Typography variant="h5" align="center">
+            {title}
+          </Typography>
+        </Grid2>
+      )}
+
       {breadcrumbs && (
         <Grid2 size={{ xs: 12 }}>
           <Breadcrumbs>

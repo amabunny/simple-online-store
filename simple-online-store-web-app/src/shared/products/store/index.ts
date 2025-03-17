@@ -79,6 +79,7 @@ export const productsSlice = createSlice({
 export {
   filteredProductsSelector,
   isAnyFilterAppliedSelector,
+  productsByIdSelector,
   sortedAndFilteredProductsSelector,
 } from "./selectors";
 export const { setProducts, setInFlight } = productsSlice.actions;

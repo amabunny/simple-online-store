@@ -1,5 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 
+import { Product } from "@/api/base";
 import { RootState } from "@/lib/store";
 
 import { Sort } from "./types";
@@ -72,4 +73,16 @@ export const sortedAndFilteredProductsSelector = createSelector(
         return products.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
     }
   },
+);
+
+export const productsByIdSelector = createSelector(
+  (state: RootState) => state.products.products,
+  (products) =>
+    products.reduce(
+      (acc, product) => {
+        if (product.id) acc[product.id] = product;
+        return acc;
+      },
+      {} as Record<number, Product>,
+    ),
 );
