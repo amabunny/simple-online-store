@@ -20,26 +20,20 @@ import {
   useDidUpdate,
 } from "@/lib/hooks";
 import {
-  IFilters,
   setFilters,
   setInFlight,
   setSort as setProductsSort,
   Sort,
+  useFiltersSync,
 } from "@/shared/products";
 
 import styles from "./style.module.scss";
 
 interface IProps {
   className?: string;
-  onFiltersChange?: (filters: IFilters) => void;
-  onSortChange?: (sort: Sort) => void;
 }
 
-export const ProductFilters = ({
-  className,
-  onFiltersChange,
-  onSortChange,
-}: IProps) => {
+export const ProductFilters = ({ className }: IProps) => {
   const dispatch = useAppDispatch();
 
   const inFlight = useAppSelector((state) => state.products.inFlight);
@@ -53,6 +47,15 @@ export const ProductFilters = ({
 
   const inFlightRef = useRef(inFlight);
 
+  const { syncFilters } = useFiltersSync({
+    priceFrom,
+    priceTo,
+    brand,
+    name,
+    isNew,
+    sort: sort !== Sort.CheapFirst ? sort : undefined,
+  });
+
   useEffect(() => {
     inFlightRef.current = inFlight;
   }, [inFlight]);
@@ -63,24 +66,14 @@ export const ProductFilters = ({
     setBrand("");
     setName("");
     setIsNew(false);
-    onFiltersChange?.({
-      priceTo: 0,
-      priceFrom: 0,
-      brand: "",
-      name: "",
-      isNew: false,
-    });
+    setSort(Sort.CheapFirst);
   };
 
   const debouncedOnFiltersChange = useDebounce(() => {
     dispatch(setFilters({ priceTo, priceFrom, brand, name, isNew }));
-    dispatch(setInFlight(false));
-    onFiltersChange?.({ priceTo, priceFrom, brand, name, isNew });
-  }, 1000);
-
-  const debouncedOnSortChange = useDebounce(() => {
     dispatch(setProductsSort(sort));
-    onSortChange?.(sort);
+    dispatch(setInFlight(false));
+    syncFilters();
   }, 1000);
 
   useDidUpdate(() => {
@@ -88,11 +81,7 @@ export const ProductFilters = ({
       dispatch(setInFlight(true));
     }
     debouncedOnFiltersChange();
-  }, [priceFrom, priceTo, brand, name, isNew, debouncedOnFiltersChange]);
-
-  useDidUpdate(() => {
-    debouncedOnSortChange();
-  }, [debouncedOnSortChange, sort]);
+  }, [priceFrom, priceTo, brand, name, isNew, sort, debouncedOnFiltersChange]);
 
   useEffect(() => {
     return () => {
@@ -105,12 +94,16 @@ export const ProductFilters = ({
           isNew: false,
         }),
       );
+      dispatch(setProductsSort(Sort.CheapFirst));
     };
   }, [dispatch]);
 
   const isAnyFilterApplied = useMemo(
-    () => [priceFrom, priceTo, name, brand, isNew].some(Boolean),
-    [priceFrom, priceTo, name, brand, isNew],
+    () =>
+      [priceFrom, priceTo, name, brand, isNew, sort !== Sort.CheapFirst].some(
+        Boolean,
+      ),
+    [priceFrom, priceTo, name, brand, isNew, sort],
   );
 
   const priceError =

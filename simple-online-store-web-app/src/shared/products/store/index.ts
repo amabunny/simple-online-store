@@ -15,7 +15,7 @@ const initialState: IProductsState = {
     name: "",
     isNew: false,
   },
-  sort: Sort.ExpensiveFirst,
+  sort: Sort.CheapFirst,
 };
 
 export const productsSlice = createSlice({
@@ -55,6 +55,7 @@ export const productsSlice = createSlice({
 export {
   filteredProductsSelector,
   isAnyFilterAppliedSelector,
+  sortedAndFilteredProductsSelector,
 } from "./selectors";
 export const { setProducts, setFilters, setInFlight, setSort } =
   productsSlice.actions;

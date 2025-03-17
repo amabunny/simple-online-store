@@ -4,7 +4,7 @@ import { CustomLink } from "@/ui/molecules/link";
 
 interface IProps {
   children: React.ReactNode;
-  breadcrumbs: {
+  breadcrumbs?: {
     label: string;
     href: string;
   }[];
@@ -13,15 +13,17 @@ interface IProps {
 export const Page = ({ breadcrumbs, children }: IProps) => {
   return (
     <Grid2 container spacing={3} flexDirection={"column"}>
-      <Grid2 size={{ xs: 12 }}>
-        <Breadcrumbs>
-          {breadcrumbs.map((breadcrumb) => (
-            <CustomLink key={breadcrumb.label} href={breadcrumb.href}>
-              {breadcrumb.label}
-            </CustomLink>
-          ))}
-        </Breadcrumbs>
-      </Grid2>
+      {breadcrumbs && (
+        <Grid2 size={{ xs: 12 }}>
+          <Breadcrumbs>
+            {breadcrumbs.map((breadcrumb) => (
+              <CustomLink key={breadcrumb.label} href={breadcrumb.href}>
+                {breadcrumb.label}
+              </CustomLink>
+            ))}
+          </Breadcrumbs>
+        </Grid2>
+      )}
       <Grid2 size={{ xs: 12 }}>{children}</Grid2>
     </Grid2>
   );

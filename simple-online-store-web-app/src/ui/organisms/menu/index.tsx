@@ -1,24 +1,12 @@
 import { Add, ShoppingCart } from "@mui/icons-material";
-import {
-  Badge,
-  Grid2,
-  IconButton,
-  Popover,
-  ToggleButton,
-  ToggleButtonGroup,
-  Typography,
-} from "@mui/material";
-import { usePathname } from "next/navigation";
+import { Badge, Grid2, IconButton, Popover, Typography } from "@mui/material";
 import { useState } from "react";
 
 import { useAppSelector, useLinkOnClick } from "@/lib/hooks";
 import { totalItemsCountSelector } from "@/shared/cart";
 
-import { CustomLink } from "../../molecules/link";
-
 export const Menu = () => {
   const totalItemsCount = useAppSelector(totalItemsCountSelector);
-  const currentPath = usePathname();
 
   const [createLinkAnchor, setCreateLinkAnchor] =
     useState<HTMLAnchorElement | null>(null);
@@ -66,20 +54,6 @@ export const Menu = () => {
           <Typography sx={{ padding: 1 }}>Создать товар </Typography>
         </Popover>
       </div>
-
-      <ToggleButtonGroup value={currentPath} exclusive size="small">
-        <ToggleButton value={"/"}>
-          <CustomLink href="/" underline={false}>
-            Клиентский фильтр
-          </CustomLink>
-        </ToggleButton>
-
-        <ToggleButton value={"/products"}>
-          <CustomLink href="/products" underline={false}>
-            Серверный фильтр
-          </CustomLink>
-        </ToggleButton>
-      </ToggleButtonGroup>
     </Grid2>
   );
 };

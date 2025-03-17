@@ -6,10 +6,9 @@ import { useEffect } from "react";
 import { Product } from "@/api/base";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/store";
 import {
-  fetchProductsByFilters,
-  filteredProductsSelector,
   isAnyFilterAppliedSelector,
   setProducts,
+  sortedAndFilteredProductsSelector,
 } from "@/shared/products";
 
 import { ProductCard } from "../product-card";
@@ -18,23 +17,17 @@ import styles from "./style.module.scss";
 
 interface IProps {
   initialProducts: Product[];
-  useServerFilter?: boolean;
 }
 
-export const ProductsList = ({ initialProducts, useServerFilter }: IProps) => {
-  const clientFilteredProducts = useAppSelector(filteredProductsSelector);
-  const products = useAppSelector((state) => state.products.products);
+export const ProductsList = ({ initialProducts }: IProps) => {
+  const sortedAndFilteredStateProducts = useAppSelector(
+    sortedAndFilteredProductsSelector,
+  );
+
+  const stateProducts = useAppSelector((state) => state.products.products);
   const isAnyFilterApplied = useAppSelector(isAnyFilterAppliedSelector);
 
   const dispatch = useAppDispatch();
-
-  const handleFiltersChange = () => {
-    if (useServerFilter) dispatch(fetchProductsByFilters());
-  };
-
-  const handleSortChange = () => {
-    if (useServerFilter) dispatch(fetchProductsByFilters());
-  };
 
   useEffect(() => {
     if (initialProducts) {
@@ -43,20 +36,14 @@ export const ProductsList = ({ initialProducts, useServerFilter }: IProps) => {
   }, [dispatch, initialProducts]);
 
   const renderingProducts =
-    isAnyFilterApplied || products.length > 0
-      ? useServerFilter
-        ? products
-        : clientFilteredProducts
+    isAnyFilterApplied || stateProducts.length > 0
+      ? sortedAndFilteredStateProducts
       : initialProducts;
 
   return (
     <Grid2 container spacing={4} flexDirection={"row"}>
       <Grid2 size={{ xs: 12, sm: 12, md: 3, lg: 3 }}>
-        <ProductFilters
-          className={styles.filters}
-          onFiltersChange={handleFiltersChange}
-          onSortChange={handleSortChange}
-        />
+        <ProductFilters className={styles.filters} />
       </Grid2>
 
       <Grid2 container spacing={2} size={{ xs: 12, sm: 12, md: 9, lg: 9 }}>

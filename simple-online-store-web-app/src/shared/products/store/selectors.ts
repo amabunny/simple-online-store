@@ -2,6 +2,8 @@ import { createSelector } from "@reduxjs/toolkit";
 
 import { RootState } from "@/lib/store";
 
+import { Sort } from "./types";
+
 export const filteredProductsSelector = createSelector(
   (state: RootState) => state.products.products,
   (state: RootState) => state.products.filters,
@@ -36,6 +38,10 @@ export const filteredProductsSelector = createSelector(
       );
     }
 
+    if (filters.isNew) {
+      filteredProducts = filteredProducts.filter((product) => product.isNew);
+    }
+
     return filteredProducts;
   },
 );
@@ -44,6 +50,26 @@ export const isAnyFilterAppliedSelector = createSelector(
   (state: RootState) => state.products.filters,
   (state: RootState) => state.products.sort,
   (filters, sort) => {
-    return Object.values(filters).some((filter) => filter) || sort;
+    return (
+      Object.values(filters).some((filter) => filter) ||
+      sort !== Sort.CheapFirst
+    );
+  },
+);
+
+export const sortedAndFilteredProductsSelector = createSelector(
+  (state: RootState) => state.products.sort,
+  filteredProductsSelector,
+  (sort, filteredProducts) => {
+    const products = [...filteredProducts];
+
+    switch (sort) {
+      case Sort.ExpensiveFirst:
+        return products.sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
+      case Sort.CheapFirst:
+        return products.sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
+      case Sort.NewFirst:
+        return products.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
+    }
   },
 );

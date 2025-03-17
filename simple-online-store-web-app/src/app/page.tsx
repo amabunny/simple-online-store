@@ -4,14 +4,12 @@ import { Page } from "@/ui";
 
 export default async function Home() {
   const products = await productsApi.productsGet({
-    orderBy: "brand",
+    orderBy: "price",
     order: "Asc",
   });
 
   return (
-    <Page
-      breadcrumbs={[{ label: "Главная (клиентская фильтрация)", href: "/" }]}
-    >
+    <Page>
       <ProductsList initialProducts={products} />
     </Page>
   );
