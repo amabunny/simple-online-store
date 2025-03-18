@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { Product } from "@/api/base";
-import { useAppDispatch } from "@/lib/hooks/store";
+import { useAppDispatch } from "@/lib/hooks/use-store";
 import { createProduct, updateProduct } from "@/shared/products";
 import { CustomSnackbar } from "@/ui";
 

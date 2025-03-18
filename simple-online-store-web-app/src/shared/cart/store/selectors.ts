@@ -1,5 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 
+import { Product } from "@/api/base";
 import { RootState } from "@/lib/store";
 import { productsByIdSelector } from "@/shared/products";
 
@@ -22,5 +23,28 @@ export const cartItemsSelector = createSelector(
         count,
       };
     });
+  },
+);
+
+export const cartItemsDictionarySelector = createSelector(
+  cartItemsSelector,
+  (cartItems) =>
+    cartItems.reduce(
+      (acc, item) => {
+        if (item.id) acc[item.id] = item;
+        return acc;
+      },
+      {} as Record<number, Product & { count: number }>,
+    ),
+);
+
+export const totalPriceSelector = createSelector(
+  cartItemsSelector,
+  (cartItems) => {
+    return cartItems.reduce((acc, item) => {
+      if (!item.price) return acc;
+
+      return acc + item.price * item.count;
+    }, 0);
   },
 );

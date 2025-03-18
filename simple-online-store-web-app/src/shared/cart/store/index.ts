@@ -36,5 +36,10 @@ const cartSlice = createSlice({
 export const cartReducer = cartSlice.reducer;
 export const { addToCart, removeFromCart } = cartSlice.actions;
 export { cartListenerMiddleware } from "./middleware";
-export { cartItemsSelector, totalItemsCountSelector } from "./selectors";
+export {
+  cartItemsDictionarySelector,
+  cartItemsSelector,
+  totalItemsCountSelector,
+  totalPriceSelector,
+} from "./selectors";
 export { loadCartFromStorage } from "./thunks";

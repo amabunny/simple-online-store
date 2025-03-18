@@ -1,6 +1,6 @@
 "use client";
 
-import { AddShoppingCart } from "@mui/icons-material";
+import { AddShoppingCart, RemoveShoppingCart } from "@mui/icons-material";
 import {
   Button,
   Card,
@@ -16,8 +16,17 @@ import {
 import { useMemo } from "react";
 
 import { Product } from "@/api/base";
-import { useAppDispatch, useLinkOnClick } from "@/lib/hooks";
-import { addToCart } from "@/shared/cart";
+import {
+  useAppDispatch,
+  useAppSelector,
+  useLinkOnClick,
+  usePriceFormatter,
+} from "@/lib/hooks";
+import {
+  addToCart,
+  cartItemsDictionarySelector,
+  removeFromCart,
+} from "@/shared/cart";
 
 interface IProps extends Product {
   loading?: boolean;
@@ -33,20 +42,26 @@ export const ProductCard = ({
 }: IProps) => {
   const dispatch = useAppDispatch();
   const handleLinkOnClick = useLinkOnClick();
-
-  const formattedPrice = useMemo(() => {
-    if (!price) return "0 RUB";
-
-    return new Intl.NumberFormat("ru-RU", {
-      style: "currency",
-      currency: "RUB",
-    }).format(price);
-  }, [price]);
+  const cartItemsDictionary = useAppSelector(cartItemsDictionarySelector);
+  const priceFormatter = usePriceFormatter();
 
   const handleAddToCart = () => {
     if (!id) return;
     dispatch(addToCart(id));
   };
+
+  const handleRemoveFromCart = () => {
+    if (!id) return;
+    dispatch(removeFromCart(id));
+  };
+
+  const inCart = id && cartItemsDictionary[id];
+
+  const cartItem = useMemo(() => {
+    if (!id) return null;
+
+    return cartItemsDictionary[id];
+  }, [cartItemsDictionary, id]);
 
   return (
     <Card>
@@ -82,7 +97,7 @@ export const ProductCard = ({
                   <Chip label="Новинка" color="warning" variant="outlined" />
                 )}
                 <Chip
-                  label={formattedPrice}
+                  label={priceFormatter.format(price ?? 0)}
                   color="primary"
                   variant="outlined"
                 />
@@ -96,9 +111,20 @@ export const ProductCard = ({
         {loading ? (
           <Skeleton height={36} width={120} />
         ) : (
-          <Button onClick={handleAddToCart} endIcon={<AddShoppingCart />}>
-            Добавить в корзину
-          </Button>
+          <>
+            <Button onClick={handleAddToCart} endIcon={<AddShoppingCart />}>
+              Добавить в корзину
+            </Button>
+
+            {inCart && (
+              <Button
+                onClick={handleRemoveFromCart}
+                endIcon={<RemoveShoppingCart />}
+              >
+                Убрать ({cartItem?.count})
+              </Button>
+            )}
+          </>
         )}
       </CardActions>
     </Card>

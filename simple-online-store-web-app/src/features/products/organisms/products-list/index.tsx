@@ -3,7 +3,7 @@
 import { Grid2 } from "@mui/material";
 
 import { Product } from "@/api/base";
-import { useAppSelector } from "@/lib/hooks/store";
+import { useAppSelector } from "@/lib/hooks/use-store";
 import {
   isAnyFilterAppliedSelector,
   sortedAndFilteredProductsSelector,
