@@ -1,7 +1,7 @@
-import * as client from "@/api/base";
+import { Configuration, ProductsApi } from "@/api/base";
 
-const configuration = new client.Configuration({
+const configuration = new Configuration({
   basePath: process.env.NEXT_PUBLIC_API_URL ?? "",
 });
 
-export const productsApi = new client.ProductsApi(configuration);
+export const productsApi = new ProductsApi(configuration);

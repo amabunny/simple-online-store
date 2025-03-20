@@ -1,6 +1,7 @@
 "use client";
 
 import { Grid2 } from "@mui/material";
+import { Suspense } from "react";
 
 import { Product } from "@/api/base";
 import { useAppSelector } from "@/lib/hooks/use-store";
@@ -33,7 +34,9 @@ export const ProductsList = ({ initialProducts }: IProps) => {
   return (
     <Grid2 container spacing={4} flexDirection={"row"}>
       <Grid2 size={{ xs: 12, sm: 12, md: 3, lg: 3 }}>
-        <ProductFilters className={styles.filters} />
+        <Suspense>
+          <ProductFilters className={styles.filters} />
+        </Suspense>
       </Grid2>
 
       <Grid2 container spacing={2} size={{ xs: 12, sm: 12, md: 9, lg: 9 }}>

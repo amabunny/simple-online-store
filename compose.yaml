@@ -13,6 +13,34 @@
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin -d db" ]
+      interval: 5s
+      retries: 5
+      timeout: 3s
+
+  backend:
+    build:
+      context: ./SimpleOnlineStoreApi
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app_network
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+
+  frontend:
+    build:
+      context: ./simple-online-store-web-app
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - app_network
 
 networks:
   app_network:

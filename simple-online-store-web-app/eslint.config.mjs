@@ -17,7 +17,7 @@ const eslintConfig = [
       "prettier",
       "plugin:prettier/recommended",
     ],
-    plugins: ["simple-import-sort"],
+    plugins: ["simple-import-sort", "prettier"],
     rules: {
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",

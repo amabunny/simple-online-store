@@ -1,4 +1,0 @@
-/** В текущем месте используется css вместо scss, чтобы не было проблем с импортом переменных из @mui/material/colors */
-
-@import "reset-css";
-@import "@mui/material/colors";
