@@ -10,10 +10,9 @@ interface IProps {
     href: string;
   }[];
   pageTitle?: string;
-  title?: string;
 }
 
-export const Page = ({ breadcrumbs, children, pageTitle, title }: IProps) => {
+export const Page = ({ breadcrumbs, children, pageTitle }: IProps) => {
   return (
     <>
       <Grid2 container spacing={3} flexDirection={"column"}>
