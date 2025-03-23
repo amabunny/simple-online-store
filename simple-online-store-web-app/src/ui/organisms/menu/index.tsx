@@ -87,7 +87,7 @@ export const Menu = () => {
 
       <Popover
         id="cart-popover"
-        open={!!cartPopoverAnchor}
+        open={!!cartPopoverAnchor && totalItemsCount > 0}
         onClose={() => setCartPopoverAnchor(null)}
         anchorEl={cartPopoverAnchor}
         anchorOrigin={{
