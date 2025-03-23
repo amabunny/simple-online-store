@@ -1,6 +1,7 @@
 "use client";
 
-import { Grid2 } from "@mui/material";
+import { Inventory2Outlined } from "@mui/icons-material";
+import { Grid2, Typography } from "@mui/material";
 import { Suspense } from "react";
 
 import { Product } from "@/api/base";
@@ -39,13 +40,30 @@ export const ProductsList = ({ initialProducts }: IProps) => {
         </Suspense>
       </Grid2>
 
-      <Grid2 container spacing={2} size={{ xs: 12, sm: 12, md: 8, lg: 9 }}>
-        {renderingProducts.map((product) => (
-          <Grid2 key={product.id} size={{ xs: 12, sm: 6, md: 6, lg: 4 }}>
-            <ProductCard {...product} />
-          </Grid2>
-        ))}
-      </Grid2>
+      {renderingProducts.length > 0 && (
+        <Grid2 container spacing={2} size={{ xs: 12, sm: 12, md: 8, lg: 9 }}>
+          {renderingProducts.map((product) => (
+            <Grid2 key={product.id} size={{ xs: 12, sm: 6, md: 6, lg: 4 }}>
+              <ProductCard {...product} />
+            </Grid2>
+          ))}
+        </Grid2>
+      )}
+
+      {renderingProducts.length === 0 && (
+        <Grid2
+          container
+          flexDirection={"column"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          size={{ xs: 12, sm: 12, md: 8, lg: 9 }}
+        >
+          <Inventory2Outlined sx={{ width: 60, height: 60 }} />
+          <Typography variant={"h5"}>
+            Товаров по вашему запросу не найдено :(
+          </Typography>
+        </Grid2>
+      )}
     </Grid2>
   );
 };

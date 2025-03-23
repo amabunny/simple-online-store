@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import { ReactNode } from "react";
 
+import { SITE_DESCRIPTION, SITE_NAME } from "@/constants/site";
 import { BaseTemplate } from "@/ui";
 
 import { StoreProvider } from "./store-provider";
@@ -17,8 +18,8 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "MUI Online Shop",
-  description: "Simple MUI Online Shop built with Next.js",
+  title: SITE_NAME,
+  description: SITE_DESCRIPTION,
 };
 
 interface IProps {

@@ -71,7 +71,6 @@ export const CartItems = () => {
                 sx={{ mb: 2 }}
               >
                 <Inventory sx={{ width: 40, height: 40 }} />
-
                 <Typography variant={"h5"}>Тут пока пусто :(</Typography>
               </Grid2>
 

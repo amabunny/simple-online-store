@@ -3,6 +3,7 @@ import { Grid2, IconButton, Typography } from "@mui/material";
 
 import { CartProduct } from "@/shared/cart/store/types";
 import { InputCounter } from "@/ui";
+import { CustomLink } from "@/ui/molecules/link";
 
 import styles from "./styles.module.scss";
 
@@ -24,9 +25,11 @@ export const CartItem = ({
       <Grid2 container justifyContent={"space-between"}>
         <Grid2 container spacing={3} flexDirection={"column"}>
           <Grid2>
-            <Typography variant={"h6"}>
-              {item.brand} {item.name}
-            </Typography>
+            <CustomLink href={`products/${item.id}`}>
+              <Typography component={"span"} variant={"h6"}>
+                {item.brand} {item.name}
+              </Typography>
+            </CustomLink>
           </Grid2>
 
           <Grid2>
