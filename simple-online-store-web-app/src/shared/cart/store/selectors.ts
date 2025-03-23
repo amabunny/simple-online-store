@@ -1,8 +1,9 @@
 import { createSelector } from "@reduxjs/toolkit";
 
-import { Product } from "@/api/base";
 import { RootState } from "@/lib/store";
 import { productsByIdSelector } from "@/shared/products";
+
+import { CartProductsDictionary } from "./types";
 
 export const totalItemsCountSelector = createSelector(
   (state: RootState) => state.cart.items,
@@ -29,13 +30,10 @@ export const cartItemsSelector = createSelector(
 export const cartItemsDictionarySelector = createSelector(
   cartItemsSelector,
   (cartItems) =>
-    cartItems.reduce(
-      (acc, item) => {
-        if (item.id) acc[item.id] = item;
-        return acc;
-      },
-      {} as Record<number, Product & { count: number }>,
-    ),
+    cartItems.reduce((acc, item) => {
+      if (item.id) acc[item.id] = item;
+      return acc;
+    }, {} as CartProductsDictionary),
 );
 
 export const totalPriceSelector = createSelector(

@@ -1,7 +1,12 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
-import { setCartItems } from "./actions";
-import { ICartState, ProductId } from "./types";
+import {
+  decreaseProductCount,
+  increaseProductCount,
+  removeProductFromCart,
+  setCartItems,
+} from "./actions";
+import { ICartState } from "./types";
 
 const initialState: ICartState = {
   items: {},
@@ -10,31 +15,33 @@ const initialState: ICartState = {
 const cartSlice = createSlice({
   name: "cart",
   initialState,
-  reducers: {
-    addToCart: (state, action: PayloadAction<ProductId>) => {
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(increaseProductCount, (state, action) => {
       if (state.items[action.payload]) {
         state.items[action.payload]++;
       } else {
         state.items[action.payload] = 1;
       }
-    },
-    removeFromCart: (state, action: PayloadAction<ProductId>) => {
+    });
+    builder.addCase(decreaseProductCount, (state, action) => {
       if (state.items[action.payload] === 1) {
         delete state.items[action.payload];
       } else {
         state.items[action.payload]--;
       }
-    },
-  },
-  extraReducers: (builder) => {
+    });
     builder.addCase(setCartItems, (state, action) => {
       state.items = action.payload;
+    });
+    builder.addCase(removeProductFromCart, (state, action) => {
+      delete state.items[action.payload];
     });
   },
 });
 
 export const cartReducer = cartSlice.reducer;
-export const { addToCart, removeFromCart } = cartSlice.actions;
+export { decreaseProductCount, increaseProductCount, removeProductFromCart };
 export { cartListenerMiddleware } from "./middleware";
 export {
   cartItemsDictionarySelector,

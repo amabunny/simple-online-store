@@ -1,15 +1,30 @@
 import { Add, ShoppingCart } from "@mui/icons-material";
-import { Badge, Grid2, IconButton, Popover, Typography } from "@mui/material";
+import {
+  Badge,
+  Grid2,
+  IconButton,
+  Popover,
+  Typography,
+  useColorScheme,
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { useState } from "react";
 
 import { useAppSelector, useLinkOnClick } from "@/lib/hooks";
 import { totalItemsCountSelector, totalPriceSelector } from "@/shared/cart";
 
+import { DarkModeToggle } from "../../molecules/dark-mode-toggle";
 import { CartPopover } from "../cart-popover";
 
 export const Menu = () => {
+  const themeMode = useColorScheme();
+
   const totalItemsCount = useAppSelector(totalItemsCountSelector);
   const totalPrice = useAppSelector(totalPriceSelector);
+
+  const theme = useTheme();
+  const matchesUpSm = useMediaQuery(theme.breakpoints.up("sm"));
 
   const [cartPopoverAnchor, setCartPopoverAnchor] =
     useState<HTMLAnchorElement | null>(null);
@@ -21,7 +36,7 @@ export const Menu = () => {
 
   return (
     <Grid2 container spacing={2}>
-      {totalItemsCount > 0 && (
+      {matchesUpSm && totalItemsCount > 0 && (
         <Grid2 container alignItems={"center"}>
           <Typography>
             Всего товаров: {totalItemsCount} на сумму{" "}
@@ -60,6 +75,15 @@ export const Menu = () => {
       >
         <Add />
       </IconButton>
+
+      <DarkModeToggle
+        checked={
+          themeMode.mode !== "system"
+            ? themeMode.mode === "dark"
+            : themeMode.systemMode === "dark"
+        }
+        onChange={(e) => themeMode.setMode(e.target.checked ? "dark" : "light")}
+      />
 
       <Popover
         id="cart-popover"

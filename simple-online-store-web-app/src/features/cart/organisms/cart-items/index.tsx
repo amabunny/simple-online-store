@@ -1,94 +1,99 @@
 "use client";
 
-import { Delete, PhoneAndroid } from "@mui/icons-material";
-import {
-  Avatar,
-  Button,
-  Grid2,
-  IconButton,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Typography,
-} from "@mui/material";
+import { Button, Grid2, Typography } from "@mui/material";
+import { useConfirm } from "material-ui-confirm";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { usePriceFormatter } from "@/lib/hooks";
 import {
+  cartItemsDictionarySelector,
   cartItemsSelector,
-  removeFromCart,
+  decreaseProductCount,
+  increaseProductCount,
+  removeProductFromCart,
   totalItemsCountSelector,
   totalPriceSelector,
 } from "@/shared/cart";
+import { CartProduct } from "@/shared/cart/store/types";
+
+import { CartItem } from "../cart-item";
 
 export const CartItems = () => {
   const cartItems = useAppSelector(cartItemsSelector);
+  const cartItemsDictionary = useAppSelector(cartItemsDictionarySelector);
   const totalItemsCount = useAppSelector(totalItemsCountSelector);
   const totalPrice = useAppSelector(totalPriceSelector);
 
+  const confirm = useConfirm();
   const dispatch = useAppDispatch();
-  const priceFormatter = usePriceFormatter();
 
-  const onDelete = (id?: number) => {
-    if (!id) return;
-    dispatch(removeFromCart(id));
+  const onIncrease = (item: CartProduct) => {
+    if (!item.id) return;
+    dispatch(increaseProductCount(item.id));
+  };
+
+  const onDecrease = async (item: CartProduct) => {
+    if (!item.id) return;
+    if (cartItemsDictionary[item.id].count === 1) {
+      const { confirmed } = await confirm({
+        title: "Вы уверены?",
+        description: "Хотите удалить товар из корзины?",
+      });
+
+      if (confirmed) dispatch(decreaseProductCount(item.id));
+    } else {
+      dispatch(decreaseProductCount(item.id));
+    }
+  };
+
+  const onDelete = async (item: CartProduct) => {
+    if (!item.id) return;
+    const { confirmed } = await confirm({
+      title: "Вы уверены?",
+      description: "Хотите удалить товар из корзины?",
+    });
+
+    if (confirmed) {
+      dispatch(removeProductFromCart(item.id));
+    }
   };
 
   return (
     <Grid2 container flexDirection={"column"} spacing={2}>
-      <List>
+      <Grid2 spacing={2} container flexDirection={"column"}>
         {cartItems.length === 0 && (
-          <ListItem>
-            <ListItemText
-              primary={<Typography align="center">Корзина пуста</Typography>}
-              secondary={
-                <Typography align="center">
-                  Добавьте товары, чтобы увидеть их список здесь!
-                </Typography>
-              }
-            />
-          </ListItem>
+          <div>
+            <div>
+              <div> Корзина пуста </div>
+
+              <Typography align="center">
+                Добавьте товары, чтобы увидеть их список здесь!
+              </Typography>
+            </div>
+          </div>
         )}
 
         {cartItems.map((item) => (
-          <ListItem
+          <CartItem
             key={item.id}
-            secondaryAction={
-              <Grid2 container spacing={2} alignItems={"center"}>
-                <Typography>{item.count} шт.</Typography>
-
-                <IconButton onClick={() => onDelete(item.id)}>
-                  <Delete />
-                </IconButton>
-              </Grid2>
-            }
-          >
-            <ListItemAvatar>
-              <Avatar>
-                <PhoneAndroid />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary={
-                <Typography>
-                  {item.brand} {item.name}
-                </Typography>
-              }
-              secondary={priceFormatter.format(item.price ?? 0)}
-            />
-          </ListItem>
+            item={item}
+            onItemDec={onDecrease}
+            onItemInc={onIncrease}
+            onItemDelete={onDelete}
+          />
         ))}
 
         {totalItemsCount > 0 && (
-          <ListItem>
-            <ListItemText
-              primary={<Typography>Итог:</Typography>}
-              secondary={priceFormatter.format(totalPrice)}
-            />
-          </ListItem>
+          <div>
+            <div>
+              <Typography>Итог:</Typography>
+              {totalPrice.toLocaleString("ru-RU", {
+                style: "currency",
+                currency: "RUB",
+              })}
+            </div>
+          </div>
         )}
-      </List>
+      </Grid2>
 
       <Grid2 container justifyContent={"center"}>
         <Button variant="contained" color="primary">

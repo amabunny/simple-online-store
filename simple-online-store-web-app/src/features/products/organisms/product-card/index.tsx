@@ -1,6 +1,6 @@
 "use client";
 
-import { AddShoppingCart, RemoveShoppingCart } from "@mui/icons-material";
+import { AddShoppingCart } from "@mui/icons-material";
 import {
   Button,
   Card,
@@ -13,20 +13,19 @@ import {
   Skeleton,
   Typography,
 } from "@mui/material";
+import { useConfirm } from "material-ui-confirm";
 import { useMemo } from "react";
 
 import { Product } from "@/api/base";
+import { useAppDispatch, useAppSelector, useLinkOnClick } from "@/lib/hooks";
 import {
-  useAppDispatch,
-  useAppSelector,
-  useLinkOnClick,
-  usePriceFormatter,
-} from "@/lib/hooks";
-import {
-  addToCart,
   cartItemsDictionarySelector,
-  removeFromCart,
+  decreaseProductCount,
+  increaseProductCount,
 } from "@/shared/cart";
+import { InputCounter } from "@/ui";
+
+import styles from "./style.module.scss";
 
 interface IProps extends Product {
   loading?: boolean;
@@ -43,25 +42,35 @@ export const ProductCard = ({
   const dispatch = useAppDispatch();
   const handleLinkOnClick = useLinkOnClick();
   const cartItemsDictionary = useAppSelector(cartItemsDictionarySelector);
-  const priceFormatter = usePriceFormatter();
-
-  const handleAddToCart = () => {
-    if (!id) return;
-    dispatch(addToCart(id));
-  };
-
-  const handleRemoveFromCart = () => {
-    if (!id) return;
-    dispatch(removeFromCart(id));
-  };
-
-  const inCart = id && cartItemsDictionary[id];
+  const confirm = useConfirm();
 
   const cartItem = useMemo(() => {
     if (!id) return null;
-
     return cartItemsDictionary[id];
   }, [cartItemsDictionary, id]);
+
+  const handleAddToCart = () => {
+    if (!id) return;
+    dispatch(increaseProductCount(id));
+  };
+
+  const handleRemoveFromCart = async () => {
+    if (!id) return;
+    if (cartItem?.count === 1) {
+      const { confirmed } = await confirm({
+        title: "Вы уверены?",
+        description: "Хотите удалить товар из корзины?",
+      });
+
+      if (confirmed) {
+        dispatch(decreaseProductCount(id));
+      }
+    } else {
+      dispatch(decreaseProductCount(id));
+    }
+  };
+
+  const inCart = id && cartItemsDictionary[id];
 
   return (
     <Card>
@@ -97,7 +106,10 @@ export const ProductCard = ({
                   <Chip label="Новинка" color="warning" variant="outlined" />
                 )}
                 <Chip
-                  label={priceFormatter.format(price ?? 0)}
+                  label={price?.toLocaleString("ru-RU", {
+                    style: "currency",
+                    currency: "RUB",
+                  })}
                   color="primary"
                   variant="outlined"
                 />
@@ -111,20 +123,22 @@ export const ProductCard = ({
         {loading ? (
           <Skeleton height={36} width={120} />
         ) : (
-          <>
-            <Button onClick={handleAddToCart} endIcon={<AddShoppingCart />}>
-              Добавить в корзину
-            </Button>
-
-            {inCart && (
-              <Button
-                onClick={handleRemoveFromCart}
-                endIcon={<RemoveShoppingCart />}
-              >
-                Убрать ({cartItem?.count})
+          <Grid2 container>
+            {inCart ? (
+              <Grid2 container alignItems={"center"}>
+                <InputCounter
+                  className={styles.inCartCounter}
+                  value={cartItem?.count ?? 0}
+                  onInc={handleAddToCart}
+                  onDec={handleRemoveFromCart}
+                />
+              </Grid2>
+            ) : (
+              <Button onClick={handleAddToCart} endIcon={<AddShoppingCart />}>
+                Купить
               </Button>
             )}
-          </>
+          </Grid2>
         )}
       </CardActions>
     </Card>

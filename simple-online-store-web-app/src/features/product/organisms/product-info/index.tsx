@@ -8,9 +8,9 @@ import { useMemo } from "react";
 import { Product } from "@/api/base";
 import { useAppDispatch, useAppSelector, useLinkOnClick } from "@/lib/hooks";
 import {
-  addToCart,
   cartItemsDictionarySelector,
-  removeFromCart,
+  decreaseProductCount,
+  increaseProductCount,
 } from "@/shared/cart";
 
 import styles from "./style.module.scss";
@@ -31,13 +31,13 @@ export const ProductInfo = ({ product }: IProps) => {
 
   const handleAddToCart = () => {
     if (product.id) {
-      dispatch(addToCart(product.id));
+      dispatch(increaseProductCount(product.id));
     }
   };
 
   const handleRemoveFromCart = () => {
     if (product.id) {
-      dispatch(removeFromCart(product.id));
+      dispatch(decreaseProductCount(product.id));
     }
   };
 
@@ -78,28 +78,35 @@ export const ProductInfo = ({ product }: IProps) => {
             </Typography>
             <Typography variant="h4">{price}</Typography>
           </Grid2>
-          <Grid2 size={{ xs: 12 }} container spacing={2}>
-            <Grid2>
-              <Button
-                variant="contained"
-                startIcon={<ShoppingCart />}
-                onClick={handleAddToCart}
-              >
-                Добавить в корзину
-              </Button>
-            </Grid2>
+          <Grid2
+            size={{ xs: 12 }}
+            container
+            spacing={2}
+            alignItems={"flex-end"}
+          >
+            <Grid2 container flexDirection={"column"} spacing={1}>
+              {inCart && (
+                <Grid2>
+                  <Button
+                    variant="outlined"
+                    startIcon={<RemoveShoppingCart />}
+                    onClick={handleRemoveFromCart}
+                  >
+                    Убрать {productInCart?.count}
+                  </Button>
+                </Grid2>
+              )}
 
-            {inCart && (
               <Grid2>
                 <Button
-                  variant="outlined"
-                  startIcon={<RemoveShoppingCart />}
-                  onClick={handleRemoveFromCart}
+                  variant="contained"
+                  startIcon={<ShoppingCart />}
+                  onClick={handleAddToCart}
                 >
-                  Убрать {productInCart?.count}
+                  Добавить в корзину
                 </Button>
               </Grid2>
-            )}
+            </Grid2>
 
             <Grid2>
               <Button

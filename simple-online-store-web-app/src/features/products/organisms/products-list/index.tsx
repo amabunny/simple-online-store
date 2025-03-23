@@ -11,7 +11,7 @@ import {
 } from "@/shared/products";
 
 import { ProductCard } from "../product-card";
-import { ProductFilters } from "../product-filters";
+import { ProductsFilters } from "../products-filters";
 import styles from "./style.module.scss";
 
 interface IProps {
@@ -33,13 +33,13 @@ export const ProductsList = ({ initialProducts }: IProps) => {
 
   return (
     <Grid2 container spacing={4} flexDirection={"row"}>
-      <Grid2 size={{ xs: 12, sm: 12, md: 3, lg: 3 }}>
+      <Grid2 size={{ xs: 12, sm: 12, md: 4, lg: 3 }}>
         <Suspense>
-          <ProductFilters className={styles.filters} />
+          <ProductsFilters className={styles.filters} />
         </Suspense>
       </Grid2>
 
-      <Grid2 container spacing={2} size={{ xs: 12, sm: 12, md: 9, lg: 9 }}>
+      <Grid2 container spacing={2} size={{ xs: 12, sm: 12, md: 8, lg: 9 }}>
         {renderingProducts.map((product) => (
           <Grid2 key={product.id} size={{ xs: 12, sm: 6, md: 6, lg: 4 }}>
             <ProductCard {...product} />

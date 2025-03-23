@@ -1,11 +1,11 @@
 import "./globals.scss";
 
-import { ThemeProvider } from "@mui/material/styles";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+import InitColorSchemeScript from "@mui/system/InitColorSchemeScript";
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
+import { ReactNode } from "react";
 
-import { theme } from "@/lib/theme";
 import { BaseTemplate } from "@/ui";
 
 import { StoreProvider } from "./store-provider";
@@ -23,18 +23,17 @@ export const metadata: Metadata = {
 };
 
 interface IProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export default function RootLayout({ children }: Readonly<IProps>) {
   return (
-    <html lang="ru">
+    /* suppressHydrationWarning нужен, чтобы корректно работал переключатель темы */
+    <html lang="ru" suppressHydrationWarning>
       <body className={roboto.variable}>
         <StoreProvider>
           <AppRouterCacheProvider>
-            <ThemeProvider theme={theme}>
-              <BaseTemplate>{children}</BaseTemplate>
-            </ThemeProvider>
+            <BaseTemplate>{children}</BaseTemplate>
           </AppRouterCacheProvider>
         </StoreProvider>
       </body>

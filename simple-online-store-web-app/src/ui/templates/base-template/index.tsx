@@ -1,19 +1,23 @@
 import { Container } from "@mui/material";
+import { ReactNode } from "react";
 
 import { Header } from "../../organisms/header";
+import { Provider } from "../../organisms/provider";
 import styles from "./style.module.scss";
 
 interface IProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 export const BaseTemplate = ({ children }: IProps) => {
   return (
-    <div>
-      <Header />
-      <Container className={styles.container} maxWidth="xl">
-        {children}
-      </Container>
-    </div>
+    <Provider>
+      <div>
+        <Header />
+        <Container className={styles.container} maxWidth="xl">
+          {children}
+        </Container>
+      </div>
+    </Provider>
   );
 };

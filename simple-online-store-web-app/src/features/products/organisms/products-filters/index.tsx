@@ -39,7 +39,7 @@ interface IProps {
   className?: string;
 }
 
-export const ProductFilters = ({ className }: IProps) => {
+export const ProductsFilters = ({ className }: IProps) => {
   const dispatch = useAppDispatch();
 
   const inFlight = useAppSelector((state) => state.products.inFlight);
@@ -187,6 +187,7 @@ export const ProductFilters = ({ className }: IProps) => {
               size="small"
               value={priceFrom === 0 ? "" : priceFrom}
               onChange={(e) => setPriceFrom(Number(e.target.value))}
+              fullWidth
             />
           </Grid2>
           <Grid2 size={{ xs: 6 }}>
@@ -196,6 +197,7 @@ export const ProductFilters = ({ className }: IProps) => {
               size="small"
               value={priceTo === 0 ? "" : priceTo}
               onChange={(e) => setPriceTo(Number(e.target.value))}
+              fullWidth
             />
           </Grid2>
         </Grid2>

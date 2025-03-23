@@ -1,15 +1,16 @@
 "use client";
 
 import { List, ListItem, ListItemText, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
-import { useAppSelector, usePriceFormatter } from "@/lib/hooks";
+import { useAppSelector } from "@/lib/hooks";
 import { cartItemsSelector } from "@/shared/cart";
 
 import styles from "./style.module.scss";
 
 export const CartPopover = () => {
   const cartItems = useAppSelector(cartItemsSelector);
-  const priceFormatter = usePriceFormatter();
 
   return (
     <div className={styles.cartPopover}>
@@ -22,7 +23,10 @@ export const CartPopover = () => {
                   {item.brand} {item.name} ({item.count} шт.)
                 </Typography>
               }
-              secondary={priceFormatter.format(item.price ?? 0)}
+              secondary={item.price?.toLocaleString("ru-RU", {
+                style: "currency",
+                currency: "RUB",
+              })}
             />
           </ListItem>
         ))}
