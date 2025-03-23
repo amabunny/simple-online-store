@@ -3,6 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,
+  FormControl,
+  FormHelperText,
   Grid2,
   TextareaAutosize,
   TextField,
@@ -101,6 +103,7 @@ export const ProductForm = ({ product }: IProps) => {
             spacing={2}
             flexDirection={"column"}
             size={{ xs: 6 }}
+            className={styles.inputs}
           >
             <Controller
               control={control}
@@ -163,11 +166,21 @@ export const ProductForm = ({ product }: IProps) => {
               control={control}
               name="description"
               render={({ field: { value, onChange } }) => (
-                <TextareaAutosize
-                  value={value}
-                  onChange={onChange}
-                  className={styles.textarea}
-                />
+                <FormControl fullWidth>
+                  <Typography gutterBottom>Описание</Typography>
+                  <TextareaAutosize
+                    id={"product-description"}
+                    value={value}
+                    onChange={onChange}
+                    className={styles.textarea}
+                    aria-describedby={"product-description-text"}
+                  />
+                  {errors.description && (
+                    <FormHelperText id={"product-description-text"}>
+                      {errors.description.message}
+                    </FormHelperText>
+                  )}
+                </FormControl>
               )}
             />
           </Grid2>

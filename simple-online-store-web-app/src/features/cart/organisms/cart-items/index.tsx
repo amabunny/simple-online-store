@@ -1,5 +1,6 @@
 "use client";
 
+import { Inventory } from "@mui/icons-material";
 import { Button, Grid2, Typography } from "@mui/material";
 import { useConfirm } from "material-ui-confirm";
 
@@ -26,13 +27,13 @@ export const CartItems = () => {
   const confirm = useConfirm();
   const dispatch = useAppDispatch();
 
-  const onIncrease = (item: CartProduct) => {
-    if (!item.id) return;
-    dispatch(increaseProductCount(item.id));
+  const onCartItemIncrease = (item: CartProduct) => {
+    if (item.id) dispatch(increaseProductCount(item.id));
   };
 
-  const onDecrease = async (item: CartProduct) => {
+  const onCartItemDecrease = async (item: CartProduct) => {
     if (!item.id) return;
+
     if (cartItemsDictionary[item.id].count === 1) {
       const { confirmed } = await confirm({
         title: "Вы уверены?",
@@ -45,16 +46,15 @@ export const CartItems = () => {
     }
   };
 
-  const onDelete = async (item: CartProduct) => {
+  const onCartItemDelete = async (item: CartProduct) => {
     if (!item.id) return;
+
     const { confirmed } = await confirm({
       title: "Вы уверены?",
       description: "Хотите удалить товар из корзины?",
     });
 
-    if (confirmed) {
-      dispatch(removeProductFromCart(item.id));
-    }
+    if (confirmed) dispatch(removeProductFromCart(item.id));
   };
 
   return (
@@ -63,9 +63,19 @@ export const CartItems = () => {
         {cartItems.length === 0 && (
           <div>
             <div>
-              <div> Корзина пуста </div>
+              <Grid2
+                container
+                spacing={2}
+                justifyContent={"center"}
+                alignItems={"center"}
+                sx={{ mb: 2 }}
+              >
+                <Inventory sx={{ width: 40, height: 40 }} />
 
-              <Typography align="center">
+                <Typography variant={"h5"}>Тут пока пусто :(</Typography>
+              </Grid2>
+
+              <Typography align="center" variant={"h6"}>
                 Добавьте товары, чтобы увидеть их список здесь!
               </Typography>
             </div>
@@ -76,30 +86,39 @@ export const CartItems = () => {
           <CartItem
             key={item.id}
             item={item}
-            onItemDec={onDecrease}
-            onItemInc={onIncrease}
-            onItemDelete={onDelete}
+            onItemDec={onCartItemDecrease}
+            onItemInc={onCartItemIncrease}
+            onItemDelete={onCartItemDelete}
           />
         ))}
 
         {totalItemsCount > 0 && (
-          <div>
-            <div>
-              <Typography>Итог:</Typography>
+          <Grid2
+            container
+            alignContent={"flex-end"}
+            flexDirection={"column"}
+            spacing={0}
+          >
+            <Typography variant={"h6"} align={"right"}>
+              Итог:
+            </Typography>
+            <Typography>
               {totalPrice.toLocaleString("ru-RU", {
                 style: "currency",
                 currency: "RUB",
               })}
-            </div>
-          </div>
+            </Typography>
+          </Grid2>
         )}
       </Grid2>
 
-      <Grid2 container justifyContent={"center"}>
-        <Button variant="contained" color="primary">
-          Оформить заказ
-        </Button>
-      </Grid2>
+      {totalItemsCount > 0 && (
+        <Grid2 container justifyContent={"center"}>
+          <Button variant="contained" color="primary">
+            Оформить заказ
+          </Button>
+        </Grid2>
+      )}
     </Grid2>
   );
 };

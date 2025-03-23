@@ -1,8 +1,6 @@
 "use client";
 
 import { List, ListItem, ListItemText, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
 
 import { useAppSelector } from "@/lib/hooks";
 import { cartItemsSelector } from "@/shared/cart";

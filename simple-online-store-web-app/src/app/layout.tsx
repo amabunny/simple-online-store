@@ -1,7 +1,6 @@
 import "./globals.scss";
 
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
-import InitColorSchemeScript from "@mui/system/InitColorSchemeScript";
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import { ReactNode } from "react";

@@ -24,33 +24,25 @@ export const ProductInfo = ({ product }: IProps) => {
   const handleLinkClick = useLinkOnClick();
   const cartItemsDictionary = useAppSelector(cartItemsDictionarySelector);
 
-  const price = product?.price?.toLocaleString("ru-RU", {
-    style: "currency",
-    currency: "RUB",
-  });
+  const price = useMemo(
+    () =>
+      product?.price?.toLocaleString("ru-RU", {
+        style: "currency",
+        currency: "RUB",
+      }),
+    [product],
+  );
 
   const handleAddToCart = () => {
-    if (product.id) {
-      dispatch(increaseProductCount(product.id));
-    }
+    if (product.id) dispatch(increaseProductCount(product.id));
   };
 
   const handleRemoveFromCart = () => {
-    if (product.id) {
-      dispatch(decreaseProductCount(product.id));
-    }
+    if (product.id) dispatch(decreaseProductCount(product.id));
   };
 
-  const inCart = useMemo(() => {
-    if (!product.id) return false;
-
-    return cartItemsDictionary[product.id];
-  }, [cartItemsDictionary, product.id]);
-
   const productInCart = useMemo(() => {
-    if (!product.id) return null;
-
-    return cartItemsDictionary[product.id];
+    if (product.id) return cartItemsDictionary[product.id];
   }, [cartItemsDictionary, product.id]);
 
   return (
@@ -85,7 +77,7 @@ export const ProductInfo = ({ product }: IProps) => {
             alignItems={"flex-end"}
           >
             <Grid2 container flexDirection={"column"} spacing={1}>
-              {inCart && (
+              {productInCart && (
                 <Grid2>
                   <Button
                     variant="outlined"

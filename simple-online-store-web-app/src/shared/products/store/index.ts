@@ -32,9 +32,7 @@ export const productsSlice = createSlice({
       state.products = action.payload;
     },
     setInFlight: (state, action) => {
-      if (state.inFlight !== action.payload) {
-        state.inFlight = action.payload;
-      }
+      state.inFlight = action.payload;
     },
   },
   extraReducers: (builder) => {
